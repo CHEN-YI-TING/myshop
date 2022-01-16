@@ -15,10 +15,10 @@ const User = sequelize.define(
       allowNull: false,
       unique: true,
       validate: {
-        len: [4, 12],
         notNull: {
-          msg: "Please enter your username",
+          msg: "請輸入姓名",
         },
+        len: [4, 12],
       },
     },
     email: {
@@ -26,19 +26,19 @@ const User = sequelize.define(
       allowNull: false,
       unique: true,
       validate: {
-        isEmail: true,
         notNull: {
-          msg: "Please enter your email",
+          msg: "請輸入你的Email",
         },
+        isEmail: true,
       },
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [5, 20],
         notNull: {
-          msg: "Please enter your password",
+          msg: "請輸入你的密碼",
+          len: [5, 20],
         },
       },
     },
@@ -58,4 +58,20 @@ User.beforeCreate((user, options) => {
       throw new Error();
     });
 });
+
+User.login = async (username, email, password) => {
+  const user = await User.findOne({
+    where: { username: username, email: email },
+  });
+  if (user) {
+    const auth = await bcrypt.compare(password, user.password);
+    if (auth) {
+      return user;
+    }
+    throw Error("password error");
+  }
+
+  throw Error("username or email error");
+};
+
 module.exports = User;
