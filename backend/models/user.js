@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const User = sequelize.define(
   "user",
   {
-    userId: {
+    id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -41,6 +41,10 @@ const User = sequelize.define(
           len: [5, 20],
         },
       },
+    },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      default: true,
     },
   },
   {

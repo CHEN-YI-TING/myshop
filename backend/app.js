@@ -1,6 +1,9 @@
 const express = require("express");
 const sequelize = require("./database/dbconfig");
 const User = require("./models/user");
+const Product = require("./models/product");
+const Order = require("./models/order");
+const OrderItem = require("./models/order-item");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
@@ -21,13 +24,40 @@ app.use(cookieParser());
 //api routes
 const authRoutes = require("./routes/auth/authRoutes");
 app.use("/auth", authRoutes);
+const productRoutes = require("./routes/ProductRoutes");
+app.use("/products", productRoutes);
+const orderRoutes = require("./routes/orderRoutes");
+app.use("/order", orderRoutes);
 
 const PORT = process.env.DB_PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`listen on port ${PORT}`);
+//user && product
+Product.belongsTo(User, {
+  onDelete: "CASCADE",
+  constraints: true,
 });
+User.hasMany(Product);
+
+//
+User.hasMany(Order, {
+  onDelete: "cascade",
+});
+Order.belongsTo(User);
+
+// order && product
+Order.belongsToMany(Product, { through: OrderItem });
+Product.belongsToMany(Order, { through: OrderItem });
 
 (async () => {
-  await sequelize.sync();
+  //{ alter: true }
+  await sequelize
+    .sync({ alter: true })
+    .then((result) => {
+      app.listen(PORT, () => {
+        console.log(`listen on port ${PORT}`);
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 })();
