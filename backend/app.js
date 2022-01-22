@@ -6,6 +6,9 @@ const Order = require("./models/order");
 const OrderItem = require("./models/order-item");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const CartItem = require("./models/cart-item");
+const Cart = require("./models/cart");
+const { creteCart } = require("./controllers/cartController");
 
 const app = express();
 require("dotenv").config;
@@ -48,6 +51,15 @@ Order.belongsTo(User);
 Order.belongsToMany(Product, { through: OrderItem });
 Product.belongsToMany(Order, { through: OrderItem });
 
+//cart
+/* User.hasOne(Cart);
+Cart.belongsTo(User); */
+Cart.hasMany(CartItem, {
+  onDelete: "cascade",
+});
+CartItem.belongsTo(Cart);
+
+//start
 (async () => {
   //{ alter: true }
   await sequelize
