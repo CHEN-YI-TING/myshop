@@ -6,6 +6,7 @@ import Signup from "../pages/Signup";
 import PageNotFound from "../pages/PageNotFound";
 import Profile from "../pages/Profile";
 import Product from "../pages/Product";
+import Order from "../pages/Order";
 import "../App.css";
 import ReorderIcon from "@mui/icons-material/Reorder";
 
@@ -39,6 +40,7 @@ function Navbar() {
           <Route path="/auth/login" exact element={<Login />}></Route>
           <Route path="/auth/signup" exact element={<Signup />}></Route>
           <Route path="/profile" exact element={<Profile />}></Route>
+          <Route path="/order" exact element={<Order />}></Route>
           <Route path="/product" exact element={<Product />}></Route>
           <Route path="/*" exact element={<PageNotFound />}></Route>
         </Routes>
