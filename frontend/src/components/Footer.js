@@ -1,9 +1,29 @@
-import React from "react";
+import * as React from "react";
 
-export default function Footer() {
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Link from "@mui/material/Link";
+
+function Copyright() {
   return (
-    <div>
-      <footer>create by 宜葶 2022</footer>
-    </div>
+    <Typography variant="body2" color="text.secondary">
+      {"Copyright © "}
+      <Link color="inherit" href="https://mui.com/">
+        Your Website
+      </Link>
+      {new Date().getFullYear()}
+    </Typography>
+  );
+}
+
+export default function StickyFooter() {
+  return (
+    <Container fixed>
+      <Box>
+        <Typography>My sticky footer can be found here.</Typography>
+        <Copyright />
+      </Box>
+    </Container>
   );
 }

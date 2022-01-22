@@ -5,6 +5,7 @@ import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import PageNotFound from "../pages/PageNotFound";
 import Profile from "../pages/Profile";
+import Product from "../pages/Product";
 import "../App.css";
 import ReorderIcon from "@mui/icons-material/Reorder";
 
@@ -21,6 +22,7 @@ function Navbar() {
               <Link to="/auth/login">登入</Link>
               <Link to="/">首頁</Link>
               <Link to="/profile">個人頁面</Link>
+              <Link to="/product">產品管理</Link>
             </div>
             <button
               className="toggle"
@@ -37,6 +39,7 @@ function Navbar() {
           <Route path="/auth/login" exact element={<Login />}></Route>
           <Route path="/auth/signup" exact element={<Signup />}></Route>
           <Route path="/profile" exact element={<Profile />}></Route>
+          <Route path="/product" exact element={<Product />}></Route>
           <Route path="/*" exact element={<PageNotFound />}></Route>
         </Routes>
       </Router>
