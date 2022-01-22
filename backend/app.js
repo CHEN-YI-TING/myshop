@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: ["http://localhost:3000"],
-    methods: ["GET", "POST", "DELETE"],
+    methods: ["GET", "POST", "DELETE", "PATCH"],
     credentials: true,
   })
 );
@@ -51,7 +51,7 @@ Product.belongsToMany(Order, { through: OrderItem });
 (async () => {
   //{ alter: true }
   await sequelize
-    .sync({ alter: true })
+    .sync()
     .then((result) => {
       app.listen(PORT, () => {
         console.log(`listen on port ${PORT}`);
