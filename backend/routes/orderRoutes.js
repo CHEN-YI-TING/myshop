@@ -10,7 +10,9 @@ router.get("/orders", orderController.getAll);
 router.get("/details/:orderId", orderItemController.seeDetails);
 router.post("/", orderController.createOrder);
 //cart
+router.get("/getAll", cartItemController.getAllCartItem);
 router.post("/add", cartController.addCart);
 router.post("/cart", cartController.createCart);
+router.delete("/delete", cartItemController.deleteCartItem);
 
 module.exports = router;

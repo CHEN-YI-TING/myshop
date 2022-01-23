@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -11,8 +11,9 @@ import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import Order from "../pages/Order";
+import CartList from "./CartList";
 
-function ProductCard({ product }) {
+function ProductCard({ product, setCartList, cartList }) {
   let navigate = useNavigate();
   const [cart, setCart] = useState([]);
   const [count, setCount] = useState({ productId: "", count: 0 });
@@ -29,22 +30,40 @@ function ProductCard({ product }) {
     setCount({ productId: id, count: cart.length });
   };
 
+  const createCart = async () => {
+    fetch("http://localhost:5000/order/cart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        localStorage.setItem("cartId", data.cartId);
+      });
+  };
+
   const addCart = async (id, count) => {
-    const cartId = localStorage.getItem("cartId");
-    const cartItem = { productId: id, totalCount: count, cartId: cartId };
-    if (cartItem.totalCount === 0) {
-      return "請決定數量";
+    const cartId = await localStorage.getItem("cartId");
+    if (cartId == undefined || null) {
+      createCart();
     } else {
-      fetch("http://localhost:5000/order/add", {
-        method: "POST",
-        body: JSON.stringify(cartItem),
-        headers: { "Content-Type": "application/json" },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          // navigate("/order");
-        });
+      const cartItem = { productId: id, totalCount: count, cartId: cartId };
+      if (cartItem.totalCount === 0) {
+        console.log("請決定數量");
+        return "請決定數量";
+      } else {
+        fetch("http://localhost:5000/order/add", {
+          method: "POST",
+          body: JSON.stringify(cartItem),
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            setCartList(data);
+            // navigate("/");
+          });
+      }
     }
   };
 

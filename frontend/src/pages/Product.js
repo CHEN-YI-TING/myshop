@@ -82,6 +82,7 @@ function Product() {
       })
       .then((products) => {
         setProductList(products);
+        setEditMode(false);
       })
       .catch((err) => console.log(err));
   };
@@ -103,7 +104,9 @@ function Product() {
       .then((res) => {
         return res.json();
       })
-      .then((products) => setProductList(products))
+      .then((products) => {
+        setProductList(products);
+      })
       .catch((err) => console.log("Error: " + err.message));
   };
   const t1 = {
