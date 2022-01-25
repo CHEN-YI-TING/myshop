@@ -7,47 +7,36 @@ import ProductCard from "../components/productCard";
 import CartList from "../components/CartList";
 import Container from "@mui/material/Container";
 import { Typography } from "@mui/material";
+import CartListProvider from "../contexts/CartListContext";
 
 function Home() {
-  let navigate = useNavigate();
-  const [productObj, setProductObj] = useState([]);
-  const [cartList, setCartList] = useState([]);
+  const productCart = {
+    border: "1px solid green",
+    padding: "10px",
+    margin: "10px",
+  };
 
-  useEffect(() => {
-    fetch("http://localhost:5000/products", {
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => res.json())
-      .then((data) => setProductObj(data));
-  }, []);
-
+  const cartList = {
+    float: "right",
+  };
   return (
     <Box>
-      <Box sx={{ float: "right" }}>
-        <CartList cartList={cartList} setCartList={setCartList}></CartList>
-      </Box>
-      <Container fixed>
-        <Typography
-          sx={{ marginTop: 10, marginBottom: 10 }}
-          variant="h2"
-          align="center"
-        >
-          這裡是首頁
-        </Typography>
+      <Typography
+        sx={{ marginTop: 5, marginBottom: 5 }}
+        variant="h2"
+        align="center"
+      >
+        這裡是首頁
+      </Typography>
 
-        <Grid container spacing={4}>
-          {productObj.map((product, key) => {
-            return (
-              <Grid item key={key} xs={12} md={6} lg={4}>
-                <ProductCard
-                  product={product}
-                  setCartList={setCartList}
-                ></ProductCard>
-              </Grid>
-            );
-          })}
-        </Grid>
-      </Container>
+      <CartListProvider>
+        <Box sx={productCart}>
+          <ProductCard />
+        </Box>
+        <Box>
+          <CartList sx={cartList} />
+        </Box>
+      </CartListProvider>
     </Box>
   );
 }

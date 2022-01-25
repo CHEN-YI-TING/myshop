@@ -4,8 +4,10 @@ const Product = require("../models/product");
 
 const getAllCartItem = async (req, res, next) => {
   const cartId = req.header("cartId");
+  //const { cartId } = req.body;
   try {
     await CartItem.findAll({
+      include: [Product],
       where: { cartId: cartId },
       attributes: [
         "productId",

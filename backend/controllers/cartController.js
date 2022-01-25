@@ -1,6 +1,5 @@
 const CartItem = require("../models/cart-item");
 const Cart = require("../models/cart");
-const User = require("../models/user");
 const sequelize = require("../database/dbconfig");
 
 const createCart = async (req, res, next) => {
@@ -23,15 +22,18 @@ const addCart = async (req, res, next) => {
       cartId: cartId,
     });
     CartItem.findAll({
-      where: { productId: productId, cartId: cartId },
+      where: { cartId: cartId },
       attributes: [
+        "productId",
         [sequelize.fn("SUM", sequelize.col("totalCount")), "totalCount"],
       ],
-    }).then((data) => {
-      data.forEach((count) => {
-        const totalCount = count.toJSON();
-        res.status(200).json({ productId, cartId, ...totalCount });
-      });
+      group: "productId",
+    }).then((cartItems) => {
+      if (cartItems.length === 0) {
+        return res.status(200).json("沒有要結帳的東西");
+      } else {
+        return res.status(200).send(cartItems);
+      }
     });
   } catch (error) {
     console.log(error);

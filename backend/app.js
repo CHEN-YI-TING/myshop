@@ -55,6 +55,8 @@ Cart.hasMany(CartItem, {
   onDelete: "cascade",
 });
 CartItem.belongsTo(Cart);
+CartItem.belongsTo(Product);
+Product.hasMany(CartItem, { onDelete: "cascade" });
 
 //start
 (async () => {
