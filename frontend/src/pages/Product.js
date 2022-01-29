@@ -57,6 +57,7 @@ function Product() {
       method: "DELETE",
       body: JSON.stringify({ productId: id }),
       headers: { "Content-Type": "application/json" },
+      credentials: 'include',
     })
       .then((res) => {
         return res.json();
@@ -76,6 +77,7 @@ function Product() {
       credentials: "include",
       body: JSON.stringify(editProduct),
       headers: { "Content-Type": "application/json" },
+      credentials: 'include',
     })
       .then((res) => {
         return res.json();
@@ -100,6 +102,7 @@ function Product() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(productObj),
+      credentials: 'include',
     })
       .then((res) => {
         return res.json();

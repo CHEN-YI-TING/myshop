@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import List from "@mui/material/List";
 import { Button, Drawer } from "@mui/material";
 import { Typography } from "@mui/material";
@@ -11,6 +12,7 @@ import Paper from "@mui/material/Paper";
 import { CartListContext } from "../contexts/CartListContext";
 
 function CartList() {
+  let navigate = useNavigate();
   const { cartList, setCartList } = useContext(CartListContext);
   useEffect(() => {
     fetch("http://localhost:5000/order/getAll", {
@@ -21,20 +23,24 @@ function CartList() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log([...{ data }]);
-      let [...data] == rd
-        /*  console.log([...data]);
-        console.log(data); */
-        setCartList(data);
+       setCartList(data);          
       });
   }, []);
 
-  const deleteCartItem = () => {
+  const deleteCartItem =  (productId) => {
     fetch("http://localhost:5000/order/delete", {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      body:JSON.stringify({productId:productId}),
+      headers: { 
+      "Content-Type": "application/json",
+      cartId: localStorage.getItem("cartId"), 
+    }
+    }).then((res)=>res.json())
+    .then((data)=>{
+      setCartList(data);
     });
   };
+
 
   return (
     <div>
@@ -49,14 +55,19 @@ function CartList() {
               <ListItemText primary={` 總共數量: ${list.totalCount} `} />
               <ListItemButton edge="end">
                 <DeleteIcon
-                  onClick={() => {
-                    deleteCartItem(list.productId);
+                  onClick={async() => {
+                    const productId = await list.productId;
+                    deleteCartItem(productId);
                   }}
                 />
               </ListItemButton>
             </ListItem>
           ))}
-          <Button>結帳</Button>
+          <Button onClick={
+            ()=>{
+              navigate('/order');
+            }
+          }>結帳</Button>
         </Paper>
       </List>
     </div>
