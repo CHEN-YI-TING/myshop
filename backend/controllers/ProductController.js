@@ -1,4 +1,6 @@
 const Product = require("../models/product");
+const jwt = require('jsonwebtoken');
+
 
 const getAllProducts = async (req, res, next) => {
   try {
@@ -20,8 +22,12 @@ const productDetail = async (req, res, next) => {
 };
 
 const addProduct = async (req, res, next) => {
+  const token =  await req.cookies.jwt;
+  const userId = await jwt.verify(token,"secret key",(error,decodedToken)=>{
+    if(error)  res.status(400).send(error);
+    return decodedToken.id;
+    });
   try {
-    const { userId } = req.body;
     const productObj = {
       userId: userId,
       title: req.body.title,
@@ -39,11 +45,16 @@ const addProduct = async (req, res, next) => {
 };
 
 const updateProduct = async (req, res, next) => {
+  const token =  await req.cookies.jwt;
+  const userId = await jwt.verify(token,"secret key",(error,decodedToken)=>{
+    if(error)  res.status(400).send(error);
+    return decodedToken.id;
+    });
   try {
     const id = req.params.productId;
 
     await Product.update(req.body, {
-      where: { id: id },
+      where: { id: id, userId: userId },
     });
     const modifyProducts = await Product.findAll();
 
@@ -54,9 +65,14 @@ const updateProduct = async (req, res, next) => {
 };
 
 const deleteProduct = async (req, res, next) => {
+  const token =  await req.cookies.jwt;
+  const userId = await jwt.verify(token,"secret key",(error,decodedToken)=>{
+    if(error)  res.status(400).send(error);
+    return decodedToken.id;
+    });
   try {
     const id = req.params.productId;
-    await Product.destroy({ where: { id: id } });
+    await Product.destroy({ where: { id: id, userId: userId } });
     const modifyProducts = await Product.findAll();
     res.status(200).send(modifyProducts);
   } catch (err) {

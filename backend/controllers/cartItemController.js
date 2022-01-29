@@ -16,7 +16,7 @@ const getAllCartItem = async (req, res, next) => {
       group: "productId",
     }).then((cartItems) => {
       if (cartItems.length === 0) {
-        return res.status(200).json("沒有要結帳的東西");
+        return res.status(200).json(cartItems);
       } else {
         return res.status(200).send(cartItems);
       }
@@ -30,11 +30,24 @@ const deleteCartItem = async (req, res, next) => {
   const { productId } = req.body;
   const cartId = req.header("cartId");
   try {
-    const cartItem = await CartItem.destroy({
+     await CartItem.destroy({
       where: { cartId: cartId, productId: productId },
+    });  
+     CartItem.findAll({
+      include: [Product],
+      where: { cartId: cartId },
+      attributes: [
+        "productId",
+        [sequelize.fn("SUM", sequelize.col("totalCount")), "totalCount"],
+      ],
+      group: "productId",
+    }).then((cartItems) => {
+      if (cartItems.length === 0) {
+        return res.status(200).send(cartItems);
+      } else {
+        return res.status(200).send(cartItems);
+      }
     });
-    console.log(cartItem);
-    res.status(200).json(cartItem);
   } catch (error) {
     console.log(error);
   }

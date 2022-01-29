@@ -44,7 +44,7 @@ const User = sequelize.define(
     },
     isAdmin: {
       type: DataTypes.BOOLEAN,
-      default: true,
+      default: false,
     },
   },
   {
@@ -64,18 +64,20 @@ User.beforeCreate((user, options) => {
 });
 
 User.login = async (username, email, password) => {
-  const user = await User.findOne({
-    where: { username: username, email: email },
-  });
-  if (user) {
-    const auth = await bcrypt.compare(password, user.password);
-    if (auth) {
-      return user;
+  try{
+    const user = await User.findOne({
+      where: { username: username, email: email },
+    });
+    if (user) {
+      const auth = await bcrypt.compare(password, user.password);
+      if (auth) {
+        return user;
+      }
+      return new Error("密碼錯誤");
     }
-    throw Error("password error");
+  }catch(err){
+    throw new Error("不好意思，您尚未註冊帳號");
   }
-
-  throw Error("username or email error");
 };
 
 module.exports = User;

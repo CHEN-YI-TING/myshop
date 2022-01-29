@@ -1,21 +1,31 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
-const requireAuth = (req, res, next) => {
-  if (token) {
-    jwt.verify(token, "secret key", (err, decodedToken) => {
-      if (err) {
+
+
+
+//check admin
+const checkAdmin = async (req, res, next) =>{
+  const token = req.cookies.jwt;
+  if(token){
+    jwt.verify(token,"secret key",(err,successToken)=>{
+      if(err){
         console.log(err.message);
-        res.redirect("/login");
-      } else {
-        console.log(decodedToken);
-        next();
+        res.redirect('/login');
+      }else {
+        let user = await User.findByPk(successToken.id);
+        if(user.admin === 1){
+          next();
+        }else{
+          console.log("不好意思你不是管理員");
+        }
       }
-    });
-  } else {
-    res.redirect("/login");
+    })
+
+  }else{
+    res.redirect("/login")
   }
-};
+}
 
 //check current user
 const checkUser = async (req, res, next) => {
@@ -40,4 +50,4 @@ const checkUser = async (req, res, next) => {
   }
 };
 
-module.exports = { requireAuth };
+module.exports = { requireAuth,checkAdmin };
