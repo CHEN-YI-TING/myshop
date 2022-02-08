@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import PersonIcon from "@mui/icons-material/Person";
