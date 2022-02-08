@@ -9,6 +9,7 @@ import Container from "@mui/material/Container";
 import { Typography } from "@mui/material";
 import CartListProvider from "../contexts/CartListContext";
 
+
 function Home() {
   const productCart = {
     border: "1px solid green",

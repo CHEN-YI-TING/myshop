@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import PersonIcon from "@mui/icons-material/Person";
@@ -15,12 +16,15 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
 
+
 function Login() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const usernameError = document.querySelector(".username.error");
   const emailError = document.querySelector(".email.error");
   const passwordError = document.querySelector(".password.error");
+  
+  
   let navigate = useNavigate();
 
   //password

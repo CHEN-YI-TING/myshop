@@ -24,6 +24,7 @@ function Navbar() {
       credentials: 'include',
     }).then((res)=>res.json)
       .then((data)=>{
+        localStorage.removeItem("cartId");
         console.log(data);
         setIsAuth(false);
         setAdminAuth(false);
@@ -41,7 +42,7 @@ function Navbar() {
             <div className="links" id={showLinks ? "hidden" : ""}>
               <Link to="/auth/signup">註冊</Link>
               <Link to="/auth/login">登入</Link>
-              <Link to="/" onClick={logout}>登出</Link>
+              <Link to="/" onClick={ logout}>登出</Link>
               <Link to="/">首頁</Link>
               <Link to="/profile">個人頁面</Link>
               <Link to="/product">產品管理</Link>
