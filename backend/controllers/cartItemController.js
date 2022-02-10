@@ -30,10 +30,10 @@ const deleteCartItem = async (req, res, next) => {
   const { productId } = req.body;
   const cartId = req.header("cartId");
   try {
-     await CartItem.destroy({
+    await CartItem.destroy({
       where: { cartId: cartId, productId: productId },
-    });  
-     CartItem.findAll({
+    });
+    CartItem.findAll({
       include: [Product],
       where: { cartId: cartId },
       attributes: [

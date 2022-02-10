@@ -1,9 +1,18 @@
 const OrderItem = require("../models/order-item");
 const Order = require("../models/order");
 const Product = require("../models/product");
+const jwt = require("jsonwebtoken");
 
 const getAll = async (req, res, next) => {
-  const { userId } = req.body;
+  const token = await req.cookies.jwt;
+  const userId = await jwt.verify(
+    token,
+    "secret key",
+    (error, decodedToken) => {
+      if (error) res.status(400).send(error);
+      return decodedToken.id;
+    }
+  );
   Order.findAll({
     where: { userId: userId },
     attributes: { exclude: ["createdAt", "updatedAt"] },
@@ -19,25 +28,35 @@ const createOrder = async (req, res, next) => {
   if (!req.body) {
     return res.status(400).send("錯誤請求");
   }
-  const { userId, productId, quantity, totalPrice } = req.body;
-
-  Product.findByPk(productId).then((product) => {
-    if (!product) {
-      return res.status(404).json("找不到此產品");
+  const token = await req.cookies.jwt;
+  const userId = await jwt.verify(
+    token,
+    "secret key",
+    (error, decodedToken) => {
+      if (error) res.status(400).send(error);
+      return decodedToken.id;
     }
-  });
+  );
+  const { orderArray, allPrice } = req.body;
+
   Order.create({
     dataReceived: new Date(),
     userId: userId,
+    totalPrice: allPrice,
   })
     .then((data) => {
       const orderId = data.toJSON().id;
-      OrderItem.create({
-        totalPrice: totalPrice,
-        orderId: orderId,
-        productId: productId,
-        quantity: quantity,
-      });
+      const newOrder = [];
+      for (let i = 0; i < orderArray.length; i++) {
+        let orderObj = {
+          totalPrice: orderArray[i].totalPrice,
+          orderId: orderId,
+          productId: orderArray[i].productId,
+          quantity: orderArray[i].quantity,
+        };
+        newOrder.push(orderObj);
+      }
+      OrderItem.bulkCreate(newOrder);
       res.status(200).json("成功建立");
     })
     .catch((err) => console.log(err));

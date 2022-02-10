@@ -32,6 +32,8 @@ const addCart = async (req, res, next) => {
       if (cartItems.length === 0) {
         return res.status(200).json("沒有要結帳的東西");
       } else {
+        console.log(JSON.stringify(cartItems));
+        console.log(JSON.stringify(cartItems.productId));
         return res.status(200).send(cartItems);
       }
     });

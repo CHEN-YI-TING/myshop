@@ -8,17 +8,16 @@ import CartList from "../components/CartList";
 import Container from "@mui/material/Container";
 import { Typography } from "@mui/material";
 import CartListProvider from "../contexts/CartListContext";
-
+import zIndex from "@mui/material/styles/zIndex";
 
 function Home() {
   const productCart = {
-    border: "1px solid green",
     padding: "10px",
     margin: "10px",
   };
 
   const cartList = {
-    float: "right",
+    zIndex: 2,
   };
   return (
     <Box>
@@ -34,8 +33,9 @@ function Home() {
         <Box sx={productCart}>
           <ProductCard />
         </Box>
-        <Box>
-          <CartList sx={cartList} />
+
+        <Box sx={cartList}>
+          <CartList />
         </Box>
       </CartListProvider>
     </Box>

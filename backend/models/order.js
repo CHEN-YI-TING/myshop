@@ -5,6 +5,7 @@ const Order = sequelize.define(
   "order",
   {
     dataReceived: DataTypes.DATEONLY,
+    totalPrice: DataTypes.DOUBLE,
   },
   {
     freezeTableName: true,
