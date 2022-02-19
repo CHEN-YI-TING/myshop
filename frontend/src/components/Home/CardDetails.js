@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 //css
-import "./cartdetail.css";
+import "./home.css";
 //state
 import { CartListContext } from "../../contexts/CartListContext";
 
@@ -9,26 +9,21 @@ function CardDetails({ product }) {
   const { addCart } = useContext(CartListContext);
 
   return (
-    <div>
-      <div className="card-container">
-        {/*  <img
-          src={product.imgUrl}
-          className="card-img"
-        >{`${product.imgUrl}`}</img> */}
-        <h2 className="card-title"> {product.title}</h2>
-        <span className="card-price">{`價格: ${product.price}元`}</span>
-
-        <div className="card-content">{product.description}</div>
-        <div>
-          <button
-            className="addCart"
-            onClick={() => {
-              addCart({ product });
-            }}
-          >
-            加入購物車
-          </button>
-        </div>
+    <div className="cart_container">
+      {/*   <div className="card-img"><img src={product.imgUrl}></img></div> */}
+      <div className="img">{product.imgUrl}</div>
+      <div className="title"> {product.title}</div>
+      <div className="price">{`價格: ${product.price}元`}</div>
+      <div className="content">{product.description}</div>
+      <div className="btn">
+        <button
+          className="addCart"
+          onClick={() => {
+            addCart({ product });
+          }}
+        >
+          加入購物車
+        </button>
       </div>
     </div>
   );
