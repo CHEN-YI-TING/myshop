@@ -2,9 +2,11 @@ import "./navbar.css";
 import ReorderIcon from "@mui/icons-material/Reorder";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 function Navbar() {
   const [showLinks, setShowLinks] = useState(false);
+  const { admin, user } = useAuth();
 
   return (
     <div>
@@ -16,11 +18,28 @@ function Navbar() {
         </div>
         <div className="rightSide">
           <div className="links" id={showLinks ? "hidden" : ""}>
-            <Link to="/auth/signup">註冊</Link>
-            <Link to="/auth/login">登入</Link>
-            <Link to="/">登出</Link>
-            <Link to="/profile">個人頁面</Link>
-            <Link to="/product">產品管理</Link>
+            {admin || user ? (
+              <>
+                (<Link to="/">登出</Link>)
+              </>
+            ) : (
+              <>
+                ( <Link to="/auth/login">登入</Link>
+                <Link to="/auth/signup">註冊</Link>)
+              </>
+            )}
+
+            {admin && (
+              <>
+                (<Link to="/product">產品管理</Link>
+                <Link to="/admin">管理者頁面</Link>)
+              </>
+            )}
+            {user && (
+              <>
+                (<Link to="/profile">使用者頁面</Link>)
+              </>
+            )}
           </div>
           <button
             className="toggle"

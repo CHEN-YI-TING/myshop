@@ -3,12 +3,26 @@ import Login from "../../pages/Login";
 import Signup from "../../pages/Signup";
 import PageNotFound from "../../pages/PageNotFound";
 import Profile from "../../pages/Profile";
+import Admin from "../../pages/Admin";
 import Product from "../../pages/Product";
 import Order from "../../pages/Order";
-import { Route, Routes } from "react-router-dom";
-import UserAuth from "../ProtectedRoute/UserAuth";
-import AdminAuth from "../ProtectedRoute/AdminAuth";
+import { Navigate, Route, Routes } from "react-router-dom";
+//protected routes
+import UserProtected from "../ProtectRoutes/UserProtected";
+import AdminProtected from "../ProtectRoutes/AdminProtected";
+import { useAuth } from "../../contexts/AuthContext";
 import Layout from "../Layout";
+
+function RequireAuth({ children }) {
+  const auth = useAuth();
+  console.log(auth);
+  const user = 0;
+  if (!user) {
+    return <Navigate to="/auth/login" />;
+  }
+
+  return children;
+}
 
 function App() {
   return (
@@ -20,15 +34,43 @@ function App() {
         <Route path="/auth/signup" element={<Signup />}></Route>
 
         {/*  user protected routed  */}
-        <Route element={<UserAuth />}>
-          <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/order" element={<Order />}></Route>
-        </Route>
+
+        <Route
+          path="/profile"
+          element={
+            <UserProtected>
+              <Profile />
+            </UserProtected>
+          }
+        ></Route>
+        <Route
+          path="/order"
+          element={
+            <UserProtected>
+              <Order />
+            </UserProtected>
+          }
+        ></Route>
+
         {/*  admin protected routed  */}
-        <Route element={<AdminAuth />}>
-          <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/product" element={<Product />}></Route>
-        </Route>
+
+        <Route
+          path="/admin"
+          element={
+            <AdminProtected>
+              <Admin />
+            </AdminProtected>
+          }
+        ></Route>
+        <Route
+          path="/product"
+          element={
+            <AdminProtected>
+              <Product />
+            </AdminProtected>
+          }
+        ></Route>
+
         {/*  missing routed */}
         <Route path="*" element={<PageNotFound />}></Route>
       </Route>

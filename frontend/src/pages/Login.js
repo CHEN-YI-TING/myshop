@@ -15,13 +15,12 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
 
-// state
-//import { AuthContext } from "../contexts/AuthProvider";
-import useAuth from "../hooks/useAuth";
+//auth state
+import { useAuth } from "../contexts/AuthContext";
 
 function Login() {
   //login state
-  const { setAuth } = useAuth();
+  const { setUser, setAdmin } = useAuth();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const usernameError = document.querySelector(".username.error");
@@ -41,7 +40,7 @@ function Login() {
     event.preventDefault();
   };
 
-  const handleSubmit = async (e) => {
+  const Login = async (e) => {
     e.preventDefault();
 
     try {
@@ -64,10 +63,12 @@ function Login() {
         usernameError.textContent = data.errors.username;
         emailError.textContent = data.errors.email;
         passwordError.textContent = data.errors.password;
-      } else if (data.user) {
+      } else if (data.admin && data.user) {
         //auth state
-        setAuth(true);
-        console.log(data);
+        setAdmin(true);
+        navigate("/");
+      } else if (data.user) {
+        setUser(true);
         navigate("/");
       }
     } catch (err) {
@@ -113,7 +114,7 @@ function Login() {
             登入會員
           </Typography>
         </div>
-        <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+        <form noValidate autoComplete="off" onSubmit={Login}>
           <PersonIcon sx={{ fontSize: 40 }} />
 
           <div className="username error"></div>

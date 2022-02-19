@@ -30,7 +30,7 @@ const createToken = (id) => {
   return jwt.sign({ id }, "secret key", { expiresIn: maxAge });
 };
 
-const signup_post = async (req, res,next) => {
+const signup_post = async (req, res, next) => {
   const { username, email, password } = req.body;
   try {
     const user = await User.create({ username, email, password });
@@ -46,8 +46,7 @@ const signup_post = async (req, res,next) => {
   }
 };
 
-
-const login_post = async (req, res,next) => {
+const login_post = async (req, res, next) => {
   const { username, email, password } = req.body;
 
   try {
@@ -57,60 +56,59 @@ const login_post = async (req, res,next) => {
       httpOnly: true,
       maxAge: maxAge * 1000,
     });
-    res.status(200).json({ user: user.id });
+    res.status(200).json({ user: user.id, admin: user.isAdmin });
   } catch (err) {
     const errors = handleErrors(err);
     res.status(400).json({ errors });
   }
 };
 
-const logout_get = async (req, res,next) => {
+const logout_get = async (req, res, next) => {
   res.cookie("jwt", "", { maxAge: 1 });
-  res.status(200).send("你已成功登出"); 
+  res.status(200).send("你已成功登出");
 };
 
+const checkUser = async (req, res, next) => {
+  const token = await req.cookies.jwt;
+  if (!token) res.status(401).send(null);
 
-const checkUser = async (req, res, next) =>{
-  const token =  await req.cookies.jwt;
-  if(!token)  res.status(401).send(null);
-  
-  const userId = await jwt.verify(token,"secret key",(error,decodedToken)=>{
-  if(error)  res.status(400).send(error);
-  return decodedToken.id;
-  });
-     
+  const userId = await jwt.verify(
+    token,
+    "secret key",
+    (error, decodedToken) => {
+      if (error) res.status(400).send(error);
+      return decodedToken.id;
+    }
+  );
+
   let user = await User.findByPk(userId);
-  if(user){
+  if (user) {
     res.status(200).json(user);
-  }else{
-    res.status(404).send(null);
-  }     
- 
-}
-
-
-const checkAdmin = async (req, res, next) =>{
- 
-  const token =  await req.cookies.jwt;
-  if(!token)  res.status(401).send(null);
-  
-  const adminId = await jwt.verify(token,"secret key",(error,decodedToken)=>{
-  if(error)  res.status(400).send(error);
-  return decodedToken.id;
-  });
-
-  let admin = await User.findAll({where:{id:adminId,isAdmin:true}});
-  if(admin){
-    res.status(200).json(admin);
-  }else{
+  } else {
     res.status(404).send(null);
   }
+};
 
- 
-}
+const checkAdmin = async (req, res, next) => {
+  const token = await req.cookies.jwt;
+  if (!token) res.status(401).send(null);
 
+  const adminId = await jwt.verify(
+    token,
+    "secret key",
+    (error, decodedToken) => {
+      if (error) res.status(400).send(error);
+      return decodedToken.id;
+    }
+  );
 
-
+  let admin = await User.findAll({ where: { id: adminId, isAdmin: true } });
+  if (admin) {
+    res.status(200).json(admin);
+  } else {
+    res.status(404).send(null);
+  }
+};
 
 module.exports = {
   signup_post,
