@@ -1,44 +1,123 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
+//create an context object
 export const CartListContext = createContext();
 
+//create the provider and its functionality --> provider
 const CartListProvider = (props) => {
-  const [cartList, setCartList] = useState([]);
+  const [cartList, setCartList] = useState(() => {
+    const localData = localStorage.getItem("cartList");
+    return localData ? JSON.parse(localData) : [];
+  });
 
-  const addCart = async (id, count) => {
-    const cartId = await localStorage.getItem("cartId");
-    if (cartId == undefined || null) {
-      fetch("http://localhost:5000/order/cart", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          localStorage.setItem("cartId", data.cartId);
+  /*  () => {
+    const localData = localStorage.getItem("cartList");
+    return localData ? JSON.parse(localData) : [];
+  } */
+
+  /*  useEffect(() => {
+    localStorage.setItem("cartList", JSON.stringify(cartList));
+  }, [addCart]); */
+
+  //for the pages that we want to access the context object's value--->consumer
+  const addCart = async ({ product }) => {
+    let data = await JSON.parse(localStorage.getItem("cartList"));
+    if (data === null) {
+      let newObj = {
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        qty: 1,
+      };
+      let newArr = [newObj];
+      setCartList(newArr);
+      localStorage.setItem("cartList", JSON.stringify(newArr));
+    }
+
+    if (data !== null) {
+      let find = await data.find((cartItem) => cartItem.id === product.id);
+      if (find === undefined) {
+        let newObj = {
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          qty: 1,
+        };
+        let newArr = [...cartList, newObj];
+        let sortArr = newArr.sort((a, b) => {
+          if (a.id > b.id) return 1;
+          else if (b.id > a.id) return -1;
+          else return 0;
         });
-    } else {
-      const cartItem = { productId: id, totalCount: count, cartId: cartId };
-      if (cartItem.totalCount === 0) {
-        console.log("請決定數量");
-        return "請決定數量";
+        setCartList(sortArr);
+        localStorage.setItem("cartList", JSON.stringify(sortArr));
       } else {
-        fetch("http://localhost:5000/order/add", {
-          method: "POST",
-          body: JSON.stringify(cartItem),
-          headers: { "Content-Type": "application/json" },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            setCartList(data);
-          });
+        console.log("你已加入購物車");
       }
     }
   };
 
+  const increment = async (id) => {
+    const data = await JSON.parse(localStorage.getItem("cartList"));
+    const productId = id;
+    let find = await data.find((item) => item.id === productId);
+    let other = await data.filter((item) => item.id !== productId);
+    let updateList = {
+      id: find.id,
+      title: find.title,
+      price: find.price,
+      qty: find.qty + 1,
+    };
+    const newList = [...other, updateList];
+    let sortList = newList.sort((a, b) => {
+      if (a.id > b.id) return 1;
+      else if (b.id > a.id) return -1;
+      else return 0;
+    });
+    setCartList(sortList);
+    localStorage.setItem("cartList", JSON.stringify(sortList));
+  };
+
+  const decrement = async (id) => {
+    const data = await JSON.parse(localStorage.getItem("cartList"));
+    const productId = id;
+    let find = await data.find((item) => item.id === productId);
+    let other = await data.filter((item) => item.id !== productId);
+    let updateList = {
+      id: find.id,
+      title: find.title,
+      price: find.price,
+      qty: find.qty - 1,
+    };
+    const newList = [...other, updateList];
+    let sortList = newList.sort((a, b) => {
+      if (a.id > b.id) return 1;
+      else if (b.id > a.id) return -1;
+      else return 0;
+    });
+    setCartList(sortList);
+    localStorage.setItem("cartList", JSON.stringify(sortList));
+  };
+
+  const deleteCartItem = async (id) => {
+    const data = await JSON.parse(localStorage.getItem("cartList"));
+    const productId = id;
+    const newList = await data.filter((item) => item.id !== productId);
+    setCartList(newList);
+    localStorage.setItem("cartList", JSON.stringify(newList));
+  };
+
   return (
-    <CartListContext.Provider value={{ cartList, addCart, setCartList }}>
+    <CartListContext.Provider
+      value={{
+        cartList,
+        setCartList,
+        addCart,
+        increment,
+        decrement,
+        deleteCartItem,
+      }}
+    >
       {props.children}
     </CartListContext.Provider>
   );

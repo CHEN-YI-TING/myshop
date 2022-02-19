@@ -1,5 +1,16 @@
-import React, { useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { useLocation, Navigate, Outlet } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+
+const UserAuth = () => {
+  const { auth } = useAuth();
+  const location = useLocation();
+
+  return auth?.user ? <Outlet /> : <Navigate to="auth/login" />;
+};
+
+export default UserAuth;
+
+/* import { Navigate } from "react-router-dom";
 
 function UserRoute({ children, isAuth, setIsAuth }) {
   useEffect(() => {
@@ -24,20 +35,4 @@ function UserRoute({ children, isAuth, setIsAuth }) {
   return isAuth ? children : <Navigate to={"/auth/login"} />;
 }
 
-export default UserRoute;
-
-/*   fetch("http://localhost:5000/auth/checkUser", {
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-  })
-    .then(async (userData) => {
-      let user = await userData.json();
-      if (user !== null) {
-        await setIsAuth(true);
-      } else {
-        await setIsAuth(false);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    }); */
+export default UserRoute; */

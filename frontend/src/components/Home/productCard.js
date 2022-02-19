@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import CardDetails from "../components/CardDetails";
-import Grid from "@mui/material/Grid";
+import CardDetails from "./CardDetails";
+import "./home.css";
 
 function ProductCard() {
   const [productObj, setProductObj] = useState([]);
@@ -14,22 +14,15 @@ function ProductCard() {
   }, []);
 
   return (
-    <Grid
-      container
-      direction="row"
-      justifyContent="center"
-      alignItems="center"
-      spacing={3}
-      sx={{ width: "70%" }}
-    >
+    <div>
       {productObj.map((product) => {
         return (
-          <Grid item xs={12} sm={12} md={3} key={product.id}>
+          <div key={product.id}>
             <CardDetails product={product} key={product.id} />
-          </Grid>
+          </div>
         );
       })}
-    </Grid>
+    </div>
   );
 }
 

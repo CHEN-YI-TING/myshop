@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import "../App.css";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+//css
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import PersonIcon from "@mui/icons-material/Person";
@@ -9,21 +9,25 @@ import LockIcon from "@mui/icons-material/Lock";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-//password
+//password css
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
 
+// state
+//import { AuthContext } from "../contexts/AuthProvider";
+import useAuth from "../hooks/useAuth";
 
 function Login() {
+  //login state
+  const { setAuth } = useAuth();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const usernameError = document.querySelector(".username.error");
   const emailError = document.querySelector(".email.error");
   const passwordError = document.querySelector(".password.error");
-  
-  
+
   let navigate = useNavigate();
 
   //password
@@ -61,6 +65,8 @@ function Login() {
         emailError.textContent = data.errors.email;
         passwordError.textContent = data.errors.password;
       } else if (data.user) {
+        //auth state
+        setAuth(true);
         console.log(data);
         navigate("/");
       }
@@ -69,6 +75,7 @@ function Login() {
     }
   };
 
+  //css
   const signup = {
     padding: "15px",
     margin: "25px",
@@ -92,6 +99,7 @@ function Login() {
     fontSize: "50px",
     paddingTop: 7,
   };
+
   return (
     <Container>
       <Box sx={title}>

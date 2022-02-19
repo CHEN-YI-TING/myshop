@@ -1,44 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import ProductCard from "../components/productCard";
-import CartList from "../components/CartList";
-import Container from "@mui/material/Container";
-import { Typography } from "@mui/material";
+//component
+import ProductCard from "../components/Home/productCard";
+import CartList from "../components/Home/CartList";
+import "../components/Home/home.css";
+
+//state
 import CartListProvider from "../contexts/CartListContext";
-import zIndex from "@mui/material/styles/zIndex";
 
 function Home() {
-  const productCart = {
-    padding: "10px",
-    margin: "10px",
-  };
-
-  const cartList = {
-    zIndex: 2,
-  };
   return (
-    <Box>
-      <Typography
-        sx={{ marginTop: 5, marginBottom: 5 }}
-        variant="h2"
-        align="center"
-      >
-        這裡是首頁
-      </Typography>
-
+    <div className="home-container">
+      <div className="page-title">這裡是首頁</div>
       <CartListProvider>
-        <Box sx={productCart}>
-          <ProductCard />
-        </Box>
-
-        <Box sx={cartList}>
-          <CartList />
-        </Box>
+        <div className="cart-layout">
+          <div className="left-side">
+            <ProductCard />
+          </div>
+          <div className="right-side">
+            <CartList />
+          </div>
+        </div>
       </CartListProvider>
-    </Box>
+    </div>
   );
 }
 

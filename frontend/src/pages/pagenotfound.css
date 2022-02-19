@@ -1,0 +1,46 @@
+.error-container {
+  height: 70%;
+  background-color: #eee;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+
+.not-found {
+  display: box;
+  background-color: white;
+  border-radius: 22px;
+  text-align: center;
+  align-self: center;
+  justify-self: center;
+  padding: 50px;
+  margin: 2px 0 2px 0;
+}
+
+.not-found h2 {
+  color: red;
+  font-size: 5rem;
+}
+
+.not-found p {
+  font-size: 6rem;
+  margin: 22px;
+}
+
+.not-found a {
+  text-decoration: none;
+  font-size: 25px;
+  color: white;
+  padding: 20px;
+  background-color: hsl(120, 100%, 25%);
+  border-radius: 22px;
+}
+
+.not-found a:hover {
+  font-size: 25px;
+  font-weight: 700;
+  color: red;
+  padding: 20px;
+  background-color: white;
+  border-radius: 22px;
+}
