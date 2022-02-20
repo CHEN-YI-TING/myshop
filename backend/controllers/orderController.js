@@ -1,6 +1,5 @@
 const OrderItem = require("../models/order-item");
 const Order = require("../models/order");
-const Product = require("../models/product");
 const jwt = require("jsonwebtoken");
 
 const getAll = async (req, res, next) => {
@@ -49,10 +48,10 @@ const createOrder = async (req, res, next) => {
       const newOrder = [];
       for (let i = 0; i < orderArray.length; i++) {
         let orderObj = {
-          totalPrice: orderArray[i].totalPrice,
+          totalPrice: orderArray[i].price * orderArray[i].qty,
           orderId: orderId,
-          productId: orderArray[i].productId,
-          quantity: orderArray[i].quantity,
+          productId: orderArray[i].id,
+          quantity: orderArray[i].qty,
         };
         newOrder.push(orderObj);
       }

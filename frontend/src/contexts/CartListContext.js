@@ -9,15 +9,7 @@ const CartListProvider = (props) => {
     const localData = localStorage.getItem("cartList");
     return localData ? JSON.parse(localData) : [];
   });
-
-  /*  () => {
-    const localData = localStorage.getItem("cartList");
-    return localData ? JSON.parse(localData) : [];
-  } */
-
-  /*  useEffect(() => {
-    localStorage.setItem("cartList", JSON.stringify(cartList));
-  }, [addCart]); */
+  const [totalPrice, setTotalPrice] = useState(0);
 
   //for the pages that we want to access the context object's value--->consumer
   const addCart = async ({ product }) => {
@@ -107,6 +99,15 @@ const CartListProvider = (props) => {
     localStorage.setItem("cartList", JSON.stringify(newList));
   };
 
+  const countTotal = async () => {
+    const data = await JSON.parse(localStorage.getItem("cartList"));
+    let total = 0;
+    data.forEach((item) => {
+      total += item.price * item.qty;
+    });
+    setTotalPrice(total);
+  };
+
   return (
     <CartListContext.Provider
       value={{
@@ -116,6 +117,8 @@ const CartListProvider = (props) => {
         increment,
         decrement,
         deleteCartItem,
+        countTotal,
+        totalPrice,
       }}
     >
       {props.children}

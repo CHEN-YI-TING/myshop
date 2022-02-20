@@ -1,4 +1,4 @@
-const CartItem = require("../models/cart-item");
+/* const CartItem = require("../models/cart-item");
 const Cart = require("../models/cart");
 const sequelize = require("../database/dbconfig");
 
@@ -46,3 +46,4 @@ module.exports = {
   addCart,
   createCart,
 };
+ */

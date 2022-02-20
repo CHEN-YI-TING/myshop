@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CartListContext } from "../../contexts/CartListContext";
 import "./home.css";
@@ -9,8 +8,16 @@ import RemoveIcon from "@mui/icons-material/Remove";
 
 function CartList() {
   let navigate = useNavigate();
-  const { cartList, deleteCartItem, increment, decrement } =
+  const { cartList, deleteCartItem, increment, decrement, setCartList } =
     useContext(CartListContext);
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("cartList"));
+    if (data === null) setCartList([]);
+    if (data === true) {
+      setCartList(data);
+    }
+  }, []);
 
   return (
     <div className="cartListContainer">

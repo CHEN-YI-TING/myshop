@@ -1,48 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import List from "@mui/material/List";
-import { Button } from "@mui/material";
-import { Typography } from "@mui/material";
-import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
+import "../components/Home/home.css";
+import DeleteIcon from "@mui/icons-material/Delete";
+import "../components/Home/home.css";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+
+import { CartListContext } from "../contexts/CartListContext";
 
 function Order() {
-  const [orderList, setOrderList] = useState([]);
-  const [totalPrice, setTotalPrice] = useState({ totalPrice: 0 });
-  const [orderResult, setOrderResult] = useState([]);
+  const [creditCartMode, setCreditCartMode] = useState(true);
+
   let navigate = useNavigate();
+  const {
+    cartList,
+    setCartList,
+    deleteCartItem,
+    increment,
+    decrement,
+    countTotal,
+    totalPrice,
+  } = useContext(CartListContext);
+
   useEffect(() => {
-    fetch("http://localhost:5000/order/getAll", {
-      headers: {
-        "Content-Type": "application/json",
-        cartId: localStorage.getItem("cartId"),
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        let currentTotalPrice = 0;
-        for (let i = 0; i < data.length; i++) {
-          let dataObj = {
-            totalPrice: data[i].totalCount * data[i].product.price,
-            productId: data[i].productId,
-            quantity: data[i].totalCount,
-          };
-          orderResult.push(dataObj);
-          currentTotalPrice += data[i].totalCount * data[i].product.price;
-        }
-        setOrderResult(orderResult);
-        setTotalPrice({ totalPrice: currentTotalPrice });
-        setOrderList(data);
-      });
+    countTotal();
+  }, [cartList]);
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("cartList"));
+    setCartList(data);
   }, []);
 
   const createOrder = () => {
     fetch("http://localhost:5000/order", {
       method: "POST",
       body: JSON.stringify({
-        orderArray: orderResult,
-        allPrice: totalPrice.totalPrice,
+        orderArray: cartList,
+        allPrice: totalPrice,
       }),
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -50,30 +46,95 @@ function Order() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+        localStorage.removeItem("cartList");
+        navigate("/profile");
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
+  //pay validation
+
   return (
     <div>
-      <List>
-        <Paper elevation={3} sx={{ margin: "50px", padding: "25px" }}>
-          <Typography variant="h5" align="center">
-            你的訂單
-          </Typography>
-          {orderList.map((list) => (
-            <ListItem key={list.productId}>
-              <ListItemText primary={` 名稱: ${list.product.title} `} />
-              <ListItemText primary={` 價格: ${list.product.price} `} />
-              <ListItemText primary={` 數量: ${list.totalCount} `} />
-              <ListItemText
-                primary={` 總共價格: ${list.totalCount * list.product.price} `}
-              />
-            </ListItem>
+      <Paper elevation={2} sx={{ margin: "10px", padding: "30px" }}>
+        <div className="cartListContainer">
+          <div className="cart_title"> 你的訂單</div>
+
+          {cartList.map((list) => (
+            <div className="cartList" key={list.id}>
+              <table>
+                <thead>
+                  <tr>
+                    <th>{`名稱`}</th>
+                    <th>{`價格`}</th>
+                    <th>{`增加`}</th>
+                    <th>{`數量`}</th>
+                    <th>{`減少`}</th>
+                    <th>{`總價`}</th>
+                    <th>{`刪除`}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td> {list.title} </td>
+                    <td>{list.price}</td>
+                    <td>
+                      <AddIcon
+                        className="cartBtn"
+                        onClick={() => {
+                          increment(list.id);
+                        }}
+                      />
+                    </td>
+                    <td>{list.qty}</td>
+                    <td>
+                      <RemoveIcon
+                        className="cartBtn"
+                        onClick={() => {
+                          decrement(list.id);
+                        }}
+                      />
+                    </td>
+                    <td>{list.qty * list.price}</td>
+                    <td>
+                      <div className="deleteBtn">
+                        <DeleteIcon
+                          onClick={async () => {
+                            const productId = await list.id;
+                            deleteCartItem(productId);
+                          }}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           ))}
-          <ListItemText primary={` 總價為: ${totalPrice.totalPrice} `} />
-          <Button onClick={createOrder}>下訂單</Button>
-        </Paper>
-      </List>
+          <div className="totalPrice">{`你的訂單總共的價格為 ${totalPrice} 元,確認好再下單`}</div>
+
+          <div>
+            {!creditCartMode && (
+              <>
+                <button className="orderBtn" onClick={createOrder}>
+                  請先輸入信用卡驗證
+                </button>
+              </>
+            )}
+          </div>
+          <div>
+            {creditCartMode && (
+              <>
+                <button className="orderBtn" onClick={createOrder}>
+                  下訂單
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </Paper>
     </div>
   );
 }

@@ -6,8 +6,8 @@ const Order = require("./models/order");
 const OrderItem = require("./models/order-item");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const CartItem = require("./models/cart-item");
-const Cart = require("./models/cart");
+// const CartItem = require("./models/cart-item");
+// const Cart = require("./models/cart");
 
 const app = express();
 require("dotenv").config;
@@ -51,12 +51,12 @@ Order.belongsToMany(Product, { through: OrderItem });
 Product.belongsToMany(Order, { through: OrderItem });
 
 //cart
-Cart.hasMany(CartItem, {
-  onDelete: "cascade",
-});
-CartItem.belongsTo(Cart);
-CartItem.belongsTo(Product);
-Product.hasMany(CartItem, { onDelete: "cascade" });
+// Cart.hasMany(CartItem, {
+//   onDelete: "cascade",
+// });
+// CartItem.belongsTo(Cart);
+// CartItem.belongsTo(Product);
+// Product.hasMany(CartItem, { onDelete: "cascade" });
 
 //start
 (async () => {

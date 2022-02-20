@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+/* const { DataTypes } = require("sequelize");
 const sequelize = require("../database/dbconfig");
 
 const CartItem = sequelize.define(
@@ -12,4 +12,4 @@ const CartItem = sequelize.define(
   }
 );
 
-module.exports = CartItem;
+module.exports = CartItem; */
