@@ -64,8 +64,12 @@ const login_post = async (req, res, next) => {
 };
 
 const logout_get = async (req, res, next) => {
-  res.cookie("jwt", "", { maxAge: 1 });
-  res.status(200).send("你已成功登出");
+  try {
+    res.cookie("jwt", "", { maxAge: 1 });
+    res.status(200).json({ 成功: "你已經成功登出" });
+  } catch (err) {
+    res.status(400).send(err);
+  }
 };
 
 const checkUser = async (req, res, next) => {
@@ -89,7 +93,7 @@ const checkUser = async (req, res, next) => {
   }
 };
 
-const checkAdmin = async (req, res, next) => {
+/* const checkAdmin = async (req, res, next) => {
   const token = await req.cookies.jwt;
   if (!token) res.status(401).send(null);
 
@@ -108,12 +112,12 @@ const checkAdmin = async (req, res, next) => {
   } else {
     res.status(404).send(null);
   }
-};
+}; */
 
 module.exports = {
   signup_post,
   login_post,
   logout_get,
   checkUser,
-  checkAdmin,
+  // checkAdmin,
 };
