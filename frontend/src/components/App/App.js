@@ -3,6 +3,10 @@ import Login from "../../pages/Login";
 import Signup from "../../pages/Signup";
 import PageNotFound from "../../pages/PageNotFound";
 import Profile from "../../pages/Profile";
+import Personal from "../Profile/Personal";
+import ChangePwd from "../Profile/ChangePwd";
+import OrderHistory from "../Profile/OrderHistory";
+import OrderDetail from "../Profile/OrderDetail";
 import Admin from "../../pages/Admin";
 import Product from "../../pages/Product";
 import Order from "../../pages/Order";
@@ -10,19 +14,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 //protected routes
 import UserProtected from "../ProtectRoutes/UserProtected";
 import AdminProtected from "../ProtectRoutes/AdminProtected";
-import { useAuth } from "../../contexts/AuthContext";
 import Layout from "../Layout";
-
-function RequireAuth({ children }) {
-  const auth = useAuth();
-  console.log(auth);
-  const user = 0;
-  if (!user) {
-    return <Navigate to="/auth/login" />;
-  }
-
-  return children;
-}
 
 function App() {
   return (
@@ -42,7 +34,12 @@ function App() {
               <Profile />
             </UserProtected>
           }
-        ></Route>
+        >
+          <Route path="personal" element={<Personal />} />
+          <Route path="changePwd" element={<ChangePwd />} />
+          <Route path="orderHistory" element={<OrderHistory />} />
+          <Route path=":id" element={<OrderDetail />} />
+        </Route>
         <Route
           path="/order"
           element={

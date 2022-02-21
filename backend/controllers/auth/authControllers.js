@@ -1,5 +1,6 @@
 const User = require("../../models/user");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 //handleErrors
 const handleErrors = (err) => {
@@ -58,8 +59,8 @@ const login_post = async (req, res, next) => {
     });
     res.status(200).json({ user: user.id, admin: user.isAdmin });
   } catch (err) {
-    const errors = handleErrors(err);
-    res.status(400).json({ errors });
+    console.log(err);
+    res.status(400).send(err);
   }
 };
 
@@ -74,22 +75,58 @@ const logout_get = async (req, res, next) => {
 
 const checkUser = async (req, res, next) => {
   const token = await req.cookies.jwt;
-  if (!token) res.status(401).send(null);
+  if (!token) return res.status(401).send({ error: "401錯誤:未授權" });
 
+  try {
+    const userId = await jwt.verify(
+      token,
+      "secret key",
+      (error, decodedToken) => {
+        if (error) return res.status(400).send(error);
+        return decodedToken.id;
+      }
+    );
+    let user = await User.findByPk(userId);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).send({ error: "404錯誤:沒有此使用者" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const updatePassword = async (req, res, next) => {
+  const token = await req.cookies.jwt;
   const userId = await jwt.verify(
     token,
     "secret key",
     (error, decodedToken) => {
-      if (error) res.status(400).send(error);
+      if (error) return res.status(400).send(error);
       return decodedToken.id;
     }
   );
+  const user = await User.findByPk(userId);
+  const { oldPassword, password } = req.body;
+  const match = await bcrypt.compare(oldPassword, user.password);
+  if (!match) return res.status(409).send({ error: "舊密碼輸入錯誤" });
 
-  let user = await User.findByPk(userId);
-  if (user) {
-    res.status(200).json(user);
-  } else {
-    res.status(404).send(null);
+  const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    const success = await User.update(
+      {
+        password: hashedPassword,
+      },
+      { where: { id: userId } }
+    );
+    if (success) {
+      return res.status(201).send({ success: "你已經成功修改密碼" });
+    } else {
+      return new Error("未修改成功");
+    }
+  } catch (err) {
+    res.status(400).send({ error: err });
   }
 };
 
@@ -119,5 +156,6 @@ module.exports = {
   login_post,
   logout_get,
   checkUser,
+  updatePassword,
   // checkAdmin,
 };

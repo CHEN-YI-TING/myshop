@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import "../components/Home/home.css";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -45,9 +44,8 @@ function Order() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         localStorage.removeItem("cartList");
-        navigate("/profile");
+        navigate(`/profile/${data.orderId}`);
       })
       .catch((err) => {
         console.log(err);

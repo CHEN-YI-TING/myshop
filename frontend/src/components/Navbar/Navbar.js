@@ -62,7 +62,7 @@ function Navbar() {
             )}
             {user && (
               <>
-                <Link to="/profile">使用者頁面</Link>
+                <Link to="/profile/personal">使用者頁面</Link>
               </>
             )}
           </div>

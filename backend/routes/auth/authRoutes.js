@@ -7,6 +7,7 @@ router.post("/signup", authController.signup_post);
 router.post("/login", authController.login_post);
 router.get("/logout", authController.logout_get);
 router.get("/checkUser", authController.checkUser);
+router.patch("/changePwd", authController.updatePassword);
 // router.get("/checkAdmin",authController.checkAdmin);
 
 module.exports = router;

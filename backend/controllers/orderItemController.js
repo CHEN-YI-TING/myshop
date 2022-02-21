@@ -1,9 +1,17 @@
 const OrderItem = require("../models/order-item");
 const Order = require("../models/order");
-const Product = require("../models/product");
+const jwt = require("jsonwebtoken");
 
 const seeDetails = async (req, res, next) => {
-  const { userId } = req.body;
+  const token = await req.cookies.jwt;
+  const userId = await jwt.verify(
+    token,
+    "secret key",
+    (error, decodedToken) => {
+      if (error) res.status(400).send(error);
+      return decodedToken.id;
+    }
+  );
   const orderId = req.params.orderId;
   Order.findAll({
     where: { userId: userId, id: orderId },

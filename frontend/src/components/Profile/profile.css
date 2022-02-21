@@ -1,0 +1,259 @@
+.profile {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  padding-top: 20px;
+  background-color: #eee;
+}
+.profilesNav {
+  width: 70%;
+  height: 20px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.profileNav a {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: white;
+  padding: 20px;
+  background-color: black;
+  border-radius: 5px;
+  display: inline-flex;
+  margin: 30px;
+  align-items: center;
+  justify-content: center;
+}
+
+/*person*/
+
+.personal {
+  background-color: brown;
+  border-radius: 4px;
+  color: white;
+  margin: 100px 0px 100px 0px;
+  padding: 25px;
+}
+.personal table {
+  margin: 0px auto;
+  padding: 55px;
+}
+.personal thead {
+  font-weight: 600;
+  font-size: 1.7rem;
+}
+
+.personal tbody {
+  font-weight: 500;
+  font-size: 1.5rem;
+}
+
+.personal th {
+  background-color: brown;
+  padding: 15px;
+}
+
+.personal td {
+  background-color: brown;
+  padding: 15px;
+}
+
+.pwd {
+  font-size: 1.2rem;
+  font-weight: 800;
+  border: transparent;
+  border-radius: 4px;
+  padding: 10px;
+  color: brown;
+  background-color: wheat;
+}
+
+.pwd:hover {
+  cursor: pointer;
+  font-weight: 800;
+  color: white;
+  background-color: brown;
+}
+
+.orderHistory {
+  padding: 2px;
+  margin: 20px;
+}
+
+.orderDetails {
+  background-color: brown;
+  border-radius: 4px;
+  color: white;
+  margin: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+}
+
+.orderDetails:hover {
+  cursor: pointer;
+}
+.orderDetails table {
+  margin: 0px auto;
+  padding: 20px;
+}
+.orderDetails thead {
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.orderDetails tbody {
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+.orderDetails th {
+  background-color: brown;
+  padding: 25px;
+}
+
+.orderDetails td {
+  background-color: brown;
+  padding: 5px;
+}
+
+/*pagination*/
+
+.pagination {
+  margin-top: 30px;
+  margin-bottom: 70px;
+  display: inline-flex;
+  justify-content: center;
+}
+.paginationBtn {
+  width: 80%;
+  height: 40px;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+}
+
+.paginationBtn a {
+  padding: 10px;
+  margin: 8px;
+  border-radius: 5px;
+  border: 1px solid #2b2eff;
+  color: #2b2eff;
+  cursor: pointer;
+}
+
+.paginationBtn a:hover {
+  color: white;
+  background-color: #2b2eff;
+}
+
+.paginationActive a {
+  color: white;
+  background-color: #2b2eff;
+}
+
+/*order details */
+.detail {
+  background-color: white;
+  padding: 50px;
+  margin: 20px 0 100px 0;
+}
+
+.detail_title {
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+  background-color: rgb(70, 203, 226);
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.detail table {
+  border: 7px solid brown;
+  border-radius: 4px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.detail th {
+  padding: 5px;
+}
+
+.detail td {
+  padding: 5px;
+}
+
+/*change pwd*/
+.changePwd {
+  display: grid;
+  background-color: brown;
+  border-radius: 4px;
+  padding: 50px;
+  margin: 20px;
+  color: white;
+}
+
+.pwt_title {
+  text-align: center;
+  padding: 10px;
+  font-size: 2rem;
+  margin-bottom: 25px;
+}
+
+.pwd_txt {
+  margin-top: 10px;
+  padding: 20px;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.pwd_txt input {
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 4px;
+  border: transparent;
+}
+
+.pwd_txt label {
+  margin-right: 20px;
+}
+
+.pwdBtn {
+  border-radius: 4px;
+  border: transparent;
+  padding: 10px;
+  font-weight: 600;
+  font-size: 1.3rem;
+  background-color: #eee;
+  margin-top: 50px;
+  justify-self: center;
+}
+
+.newSuc {
+  background-color: orangered;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: white;
+  text-align: center;
+}
+
+.oldErr {
+  background-color: red;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: white;
+  text-align: center;
+  margin: 10px;
+}
+
+.pwdBtn:hover {
+  cursor: pointer;
+  background-color: black;
+  color: white;
+}

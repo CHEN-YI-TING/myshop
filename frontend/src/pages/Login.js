@@ -23,16 +23,11 @@ function Login() {
   const { setUser, setAdmin } = useAuth();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const usernameError = document.querySelector(".username.error");
-  const emailError = document.querySelector(".email.error");
-  const passwordError = document.querySelector(".password.error");
-
   let navigate = useNavigate();
 
   //password
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const handleClickShowPassword = () => {
     setShowPassword((showPassword) => !showPassword);
   };
@@ -40,11 +35,12 @@ function Login() {
     event.preventDefault();
   };
 
+  //login
   const Login = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:5000/auth/login", {
+      fetch("http://localhost:5000/auth/login", {
         method: "POST",
         mode: "cors",
         credentials: "include",
@@ -56,21 +52,20 @@ function Login() {
           email: email,
           password: password,
         }),
-      });
-
-      const data = await res.json();
-      if (data.errors) {
-        usernameError.textContent = data.errors.username;
-        emailError.textContent = data.errors.email;
-        passwordError.textContent = data.errors.password;
-      } else if (data.admin && data.user) {
-        //auth state
-        setAdmin(true);
-        navigate("/");
-      } else if (data.user) {
-        setUser(true);
-        navigate("/");
-      }
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.admin && data.user) {
+            //auth state
+            setAdmin(true);
+            navigate("/");
+          } else if (data.user) {
+            setUser(true);
+            navigate("/");
+          } else {
+            console.log(data);
+          }
+        });
     } catch (err) {
       console.log(err);
     }
@@ -117,7 +112,6 @@ function Login() {
         <form noValidate autoComplete="off" onSubmit={Login}>
           <PersonIcon sx={{ fontSize: 40 }} />
 
-          <div className="username error"></div>
           <TextField
             onChange={(e) => setUsername(e.target.value)}
             label="使用者名稱"
@@ -129,7 +123,7 @@ function Login() {
           />
 
           <EmailIcon sx={{ fontSize: 40 }} />
-          <div className="email error"></div>
+
           <TextField
             onChange={(e) => setEmail(e.target.value)}
             label="Email"
@@ -141,7 +135,7 @@ function Login() {
           />
 
           <LockIcon sx={{ fontSize: 40 }} />
-          <div className="password error"></div>
+
           <TextField
             onChange={(e) => setPassword(e.target.value)}
             label="密碼"

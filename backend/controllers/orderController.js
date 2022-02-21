@@ -3,24 +3,29 @@ const Order = require("../models/order");
 const jwt = require("jsonwebtoken");
 
 const getAll = async (req, res, next) => {
-  const token = await req.cookies.jwt;
-  const userId = await jwt.verify(
-    token,
-    "secret key",
-    (error, decodedToken) => {
-      if (error) res.status(400).send(error);
-      return decodedToken.id;
-    }
-  );
-  Order.findAll({
-    where: { userId: userId },
-    attributes: { exclude: ["createdAt", "updatedAt"] },
-  }).then((orders) => {
-    if (orders.length === 0) {
-      return res.status(404).json("沒有訂單");
-    }
-    return res.status(200).send(orders);
-  });
+  try {
+    const token = await req.cookies.jwt;
+    const userId = await jwt.verify(
+      token,
+      "secret key",
+      (error, decodedToken) => {
+        if (error) res.status(400).send(error);
+        return decodedToken.id;
+      }
+    );
+    Order.findAll({
+      where: { userId: userId },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+    }).then((orders) => {
+      if (orders.length === 0) {
+        return res.status(200).send(orders);
+      } else {
+        return res.status(200).send(orders);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const createOrder = async (req, res, next) => {
@@ -56,7 +61,7 @@ const createOrder = async (req, res, next) => {
         newOrder.push(orderObj);
       }
       OrderItem.bulkCreate(newOrder);
-      res.status(200).json("成功建立");
+      res.status(200).json({ success: "成功建立", orderId: orderId });
     })
     .catch((err) => console.log(err));
 };

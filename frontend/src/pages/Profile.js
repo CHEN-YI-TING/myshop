@@ -1,23 +1,17 @@
-import React, { useEffect, useState } from "react";
-
+import React from "react";
+import "../components/Profile/profile.css";
+import { Link, Outlet } from "react-router-dom";
 
 function Profile() {
-  const [userObj,setUserObj] =useState([]);
- 
-  useEffect(()=> {
-    fetch('http://localhost:5000/auth/checkUser',{     
-    headers: { "Content-Type": "application/json" },
-    credentials: 'include', })
-    .then((res)=>res.json())
-    .then((data)=>{
-      setUserObj(data);
-      console.log(data);
-    }).catch((err)=>{
-        console.log(err);
-    });
-
-  },[])
-  return <div>{userObj.username}</div>;
+  return (
+    <div className="profile">
+      <div className="profileNav">
+        <Link to="/profile/personal">個人資訊</Link>
+        <Link to="/profile/orderHistory">訂單歷史</Link>
+      </div>
+      <Outlet />
+    </div>
+  );
 }
 
 export default Profile;
