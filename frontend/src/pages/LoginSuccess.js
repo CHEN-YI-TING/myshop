@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import "./login.css";
+import { useAuth } from "../contexts/AuthContext";
 
 function LoginSuccess() {
+  const { setUser, user } = useAuth();
   useEffect(() => {
     fetch("http://localhost:5000/auth/user", {
       mode: "cors",
@@ -14,6 +16,7 @@ function LoginSuccess() {
       .then((user) => {
         if (user) {
           // console.log(user);
+          setUser(true);
         } else {
           console.log("未正確登入");
         }

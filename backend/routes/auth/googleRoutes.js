@@ -45,7 +45,7 @@ router.get("/user", (req, res) => {
     return res.status(401).send({ error: "你尚未登入" });
   }
   const token = createToken(req.user.id);
-  console.log("this is  ------------------------token", token);
+  console.log("this is token", token);
   res.cookie("jwt", token, {
     httpOnly: true,
     maxAge: maxAge * 1000,

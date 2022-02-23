@@ -4,7 +4,6 @@ const cors = require("cors");
 const corsOptions = require("./config/corsOptions");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
-//const session = require("express-session");
 const cookieSession = require("cookie-session");
 const api = require("./api/v1");
 require("dotenv").config;
@@ -16,13 +15,6 @@ app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-/* app.use(
-  session({
-    secret: [process.env.COOKIE_KEY],
-    resave: false,
-    saveUninitialized: false,
-  })
-); */
 
 app.use(
   cookieSession({
@@ -37,6 +29,7 @@ app.use(passport.session());
 
 app.use("/", api);
 
+require("./models/index");
 const PORT = process.env.DB_PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Listening: http://localhost:${PORT}`);

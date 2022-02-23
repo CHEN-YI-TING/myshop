@@ -14,7 +14,10 @@ export function AuthProvider(props) {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.id && data.isAdmin == null) {
+        if (
+          (data.id && data.isAdmin === false) ||
+          (data.id && data.isAdmin == null)
+        ) {
           setUser(true);
         } else if (data.id && data.isAdmin) {
           setAdmin(true);
