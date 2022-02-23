@@ -6,21 +6,18 @@ function OrderDetail() {
   const [detail, setDetail] = useState([]);
   const { id } = useParams();
   useEffect(() => {
-    (function getOrder() {
-      let url = `http://localhost:5000/order/details/${id}`;
-
-      fetch(url, {
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
+    let url = `http://localhost:5000/order/details/${id}`;
+    fetch(url, {
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setDetail(data);
       })
-        .then((res) => res.json())
-        .then((data) => {
-          setDetail(data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    })();
+      .catch((err) => {
+        console.log(err);
+      });
   }, [id]);
   return (
     <div className="detail">

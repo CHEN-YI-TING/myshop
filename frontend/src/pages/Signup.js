@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./login.css";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -28,9 +29,6 @@ function Signup() {
 
   const handleClickShowPassword = () => {
     setShowPassword((showPassword) => !showPassword);
-  };
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
   };
 
   const handleSubmit = async (e) => {
@@ -65,45 +63,12 @@ function Signup() {
     }
   };
 
-  const signup = {
-    padding: "15px",
-    margin: "25px",
-    border: "1px solid gray",
-    backgroundColor: "white",
-    fontSize: "25px",
-    borderRadius: "15px",
-  };
-
-  const textField = {
-    marginTop: "20px",
-    marginBottom: "20px",
-    display: "block",
-    size: "large",
-    fontSize: 20,
-    label: 90,
-  };
-
-  const title = {
-    height: "100px",
-    fontSize: "50px",
-    paddingTop: 7,
-  };
   return (
-    <Container>
-      <Box sx={title}>
-        <Typography variant="h2" align="center">
-          請註冊會員
-        </Typography>
-      </Box>
-      <Box sx={signup}>
-        <div>
-          <Typography variant="h4" align="center">
-            註冊會員帳號
-          </Typography>
-        </div>
-        <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-          <PersonIcon sx={{ fontSize: 40 }} />
-
+    <div className="login_container">
+      <form className="login_form" onSubmit={handleSubmit}>
+        <h2>請註冊會員</h2>
+        <div className="login_content">
+          <PersonIcon className="icon" />
           <div className="username error"></div>
           <TextField
             onChange={(e) => setUsername(e.target.value)}
@@ -112,10 +77,12 @@ function Signup() {
             color="secondary"
             fullWidth
             required
-            sx={textField}
+            className="textField"
           />
+        </div>
 
-          <EmailIcon sx={{ fontSize: 40 }} />
+        <div className="login_content">
+          <EmailIcon className="icon" />
           <div className="email error"></div>
           <TextField
             onChange={(e) => setEmail(e.target.value)}
@@ -124,10 +91,12 @@ function Signup() {
             color="secondary"
             fullWidth
             required
-            sx={textField}
+            className="textField"
           />
+        </div>
 
-          <LockIcon sx={{ fontSize: 40 }} />
+        <div className="login_content">
+          <LockIcon className="icon" />
           <div className="password error"></div>
           <TextField
             onChange={(e) => setPassword(e.target.value)}
@@ -137,14 +106,13 @@ function Signup() {
             fullWidth
             required
             type={showPassword ? "text" : "password"}
-            sx={textField}
+            className="textField"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
                     onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
                     edge="end"
                   >
                     {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -153,7 +121,8 @@ function Signup() {
               ),
             }}
           />
-
+        </div>
+        <div className="signup_btn">
           <Button
             type="submit"
             color="secondary"
@@ -162,9 +131,9 @@ function Signup() {
           >
             註冊
           </Button>
-        </form>
-      </Box>
-    </Container>
+        </div>
+      </form>
+    </div>
   );
 }
 

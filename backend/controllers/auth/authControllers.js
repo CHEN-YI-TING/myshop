@@ -1,6 +1,7 @@
 const User = require("../../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+require("dotenv").config();
 
 //handleErrors
 const handleErrors = (err) => {
@@ -28,7 +29,7 @@ const handleErrors = (err) => {
 //createToken
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id) => {
-  return jwt.sign({ id }, "secret key", { expiresIn: maxAge });
+  return jwt.sign({ id }, process.env.JWT_SECRET_KEY, { expiresIn: maxAge });
 };
 
 const signup_post = async (req, res, next) => {
@@ -49,18 +50,34 @@ const signup_post = async (req, res, next) => {
 
 const login_post = async (req, res, next) => {
   const { username, email, password } = req.body;
-
   try {
-    const user = await User.login(username, email, password);
-    const token = createToken(user.id);
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      maxAge: maxAge * 1000,
+    const user = await User.findOne({
+      where: { username: username, email: email },
     });
-    res.status(200).json({ user: user.id, admin: user.isAdmin });
+    if (user) {
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) {
+        return res.status(400).send({ error: "密碼錯誤，請再確認" });
+      } else {
+        const token = createToken(user.id);
+        res.cookie("jwt", token, {
+          httpOnly: true,
+          maxAge: maxAge * 1000,
+        });
+        res.status(200).json({ user: user.id, admin: user.isAdmin });
+      }
+    } else {
+      return res.status(404).send({ error: "用戶名，或是email錯誤" });
+    }
   } catch (err) {
     console.log(err);
-    res.status(400).send(err);
+  }
+};
+
+User.login = async (username, email, password) => {
+  try {
+  } catch (err) {
+    throw new Error("不好意思,您尚未註冊帳號");
   }
 };
 
@@ -80,7 +97,7 @@ const checkUser = async (req, res, next) => {
   try {
     const userId = await jwt.verify(
       token,
-      "secret key",
+      process.env.JWT_SECRET_KEY,
       (error, decodedToken) => {
         if (error) return res.status(400).send(error);
         return decodedToken.id;
@@ -101,7 +118,7 @@ const updatePassword = async (req, res, next) => {
   const token = await req.cookies.jwt;
   const userId = await jwt.verify(
     token,
-    "secret key",
+    process.env.JWT_SECRET_KEY,
     (error, decodedToken) => {
       if (error) return res.status(400).send(error);
       return decodedToken.id;
@@ -136,7 +153,7 @@ const updatePassword = async (req, res, next) => {
 
   const adminId = await jwt.verify(
     token,
-    "secret key",
+   process.env.JWT_SECRET_KEY,
     (error, decodedToken) => {
       if (error) res.status(400).send(error);
       return decodedToken.id;

@@ -18,7 +18,7 @@ const User = sequelize.define(
         notNull: {
           msg: "請輸入姓名",
         },
-        len: [4, 12],
+        len: [4, 50],
       },
     },
     email: {
@@ -46,6 +46,14 @@ const User = sequelize.define(
       type: DataTypes.BOOLEAN,
       default: false,
     },
+    googleId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    picture: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     freezeTableName: true,
@@ -62,22 +70,5 @@ User.beforeCreate((user, options) => {
       throw new Error();
     });
 });
-
-User.login = async (username, email, password) => {
-  try{
-    const user = await User.findOne({
-      where: { username: username, email: email },
-    });
-    if (user) {
-      const auth = await bcrypt.compare(password, user.password);
-      if (auth) {
-        return user;
-      }
-      return new Error("密碼錯誤");
-    }
-  }catch(err){
-    throw new Error("不好意思，您尚未註冊帳號");
-  }
-};
 
 module.exports = User;

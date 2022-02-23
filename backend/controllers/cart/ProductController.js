@@ -1,6 +1,6 @@
-const Product = require("../models/product");
-const jwt = require('jsonwebtoken');
-
+const Product = require("../../models/product");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const getAllProducts = async (req, res, next) => {
   try {
@@ -22,11 +22,15 @@ const productDetail = async (req, res, next) => {
 };
 
 const addProduct = async (req, res, next) => {
-  const token =  await req.cookies.jwt;
-  const userId = await jwt.verify(token,"secret key",(error,decodedToken)=>{
-    if(error)  res.status(400).send(error);
-    return decodedToken.id;
-    });
+  const token = await req.cookies.jwt;
+  const userId = await jwt.verify(
+    token,
+    process.env.JWT_SECRET_KEY,
+    (error, decodedToken) => {
+      if (error) res.status(400).send(error);
+      return decodedToken.id;
+    }
+  );
   try {
     const productObj = {
       userId: userId,
@@ -45,11 +49,15 @@ const addProduct = async (req, res, next) => {
 };
 
 const updateProduct = async (req, res, next) => {
-  const token =  await req.cookies.jwt;
-  const userId = await jwt.verify(token,"secret key",(error,decodedToken)=>{
-    if(error)  res.status(400).send(error);
-    return decodedToken.id;
-    });
+  const token = await req.cookies.jwt;
+  const userId = await jwt.verify(
+    token,
+    process.env.JWT_SECRET_KEY,
+    (error, decodedToken) => {
+      if (error) res.status(400).send(error);
+      return decodedToken.id;
+    }
+  );
   try {
     const id = req.params.productId;
 
@@ -65,11 +73,15 @@ const updateProduct = async (req, res, next) => {
 };
 
 const deleteProduct = async (req, res, next) => {
-  const token =  await req.cookies.jwt;
-  const userId = await jwt.verify(token,"secret key",(error,decodedToken)=>{
-    if(error)  res.status(400).send(error);
-    return decodedToken.id;
-    });
+  const token = await req.cookies.jwt;
+  const userId = await jwt.verify(
+    token,
+    process.env.JWT_SECRET_KEY,
+    (error, decodedToken) => {
+      if (error) res.status(400).send(error);
+      return decodedToken.id;
+    }
+  );
   try {
     const id = req.params.productId;
     await Product.destroy({ where: { id: id, userId: userId } });

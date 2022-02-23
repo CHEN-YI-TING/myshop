@@ -57,12 +57,12 @@ function Navbar() {
             {admin && (
               <>
                 <Link to="/product">產品管理</Link>
-                <Link to="/admin">管理者頁面</Link>
+                <Link to="/admin">訂單管理</Link>
               </>
             )}
             {user && (
               <>
-                <Link to="/profile/personal">使用者頁面</Link>
+                <Link to="/profile/personal">個人頁面</Link>
               </>
             )}
           </div>

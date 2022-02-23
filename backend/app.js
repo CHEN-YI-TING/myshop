@@ -1,74 +1,43 @@
 const express = require("express");
-const sequelize = require("./database/dbconfig");
-const User = require("./models/user");
-const Product = require("./models/product");
-const Order = require("./models/order");
-const OrderItem = require("./models/order-item");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
-// const CartItem = require("./models/cart-item");
-// const Cart = require("./models/cart");
-
 const app = express();
+const cors = require("cors");
+const corsOptions = require("./config/corsOptions");
+const cookieParser = require("cookie-parser");
+const passport = require("passport");
+//const session = require("express-session");
+const cookieSession = require("cookie-session");
+const api = require("./api/v1");
 require("dotenv").config;
+require("./config/passportGoogleSSO");
+
+//Cross Origin Resource Sharing
+app.use(cors(corsOptions));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
+/* app.use(
+  session({
+    secret: [process.env.COOKIE_KEY],
+    resave: false,
+    saveUninitialized: false,
+  })
+); */
+
 app.use(
-  cors({
-    origin: ["http://localhost:3000"],
-    methods: ["GET", "POST", "DELETE", "PATCH"],
-    credentials: true,
+  cookieSession({
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: [process.env.COOKIE_KEY],
   })
 );
-app.use(cookieParser());
 
-//api routes
-const authRoutes = require("./routes/auth/authRoutes");
-app.use("/auth", authRoutes);
-const productRoutes = require("./routes/ProductRoutes");
-app.use("/products", productRoutes);
-const orderRoutes = require("./routes/orderRoutes");
-app.use("/order", orderRoutes);
+//google auth
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use("/", api);
 
 const PORT = process.env.DB_PORT || 5000;
-
-//user && product
-Product.belongsTo(User, {
-  onDelete: "CASCADE",
-  constraints: true,
+app.listen(PORT, () => {
+  console.log(`Listening: http://localhost:${PORT}`);
 });
-User.hasMany(Product);
-
-//
-User.hasMany(Order, {
-  onDelete: "cascade",
-});
-Order.belongsTo(User);
-
-// order && product
-Order.belongsToMany(Product, { through: OrderItem });
-Product.belongsToMany(Order, { through: OrderItem });
-
-//cart
-// Cart.hasMany(CartItem, {
-//   onDelete: "cascade",
-// });
-// CartItem.belongsTo(Cart);
-// CartItem.belongsTo(Product);
-// Product.hasMany(CartItem, { onDelete: "cascade" });
-
-//start
-(async () => {
-  //{ alter: true }
-  await sequelize
-    .sync()
-    .then((result) => {
-      app.listen(PORT, () => {
-        console.log(`listen on port ${PORT}`);
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-})();

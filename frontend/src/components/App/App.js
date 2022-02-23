@@ -15,6 +15,8 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import UserProtected from "../ProtectRoutes/UserProtected";
 import AdminProtected from "../ProtectRoutes/AdminProtected";
 import Layout from "../Layout";
+import LoginSuccess from "../../pages/LoginSuccess";
+import LoginError from "../../pages/LoginError";
 
 function App() {
   return (
@@ -23,6 +25,11 @@ function App() {
         {/*  public routed */}
         <Route index element={<Home />}></Route>
         <Route path="/auth/login" element={<Login />}></Route>
+        <Route
+          path="/auth/login/google/success"
+          element={<LoginSuccess />}
+        ></Route>
+        <Route path="/auth/login/google/error" element={<LoginError />}></Route>
         <Route path="/auth/signup" element={<Signup />}></Route>
 
         {/*  user protected routed  */}
