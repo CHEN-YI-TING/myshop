@@ -2,6 +2,7 @@ const User = require("./user");
 const Product = require("./product");
 const Order = require("./order");
 const OrderItem = require("./order-item");
+const Like = require("./like");
 const sequelize = require("../database/dbconfig");
 
 //user && product
@@ -20,7 +21,12 @@ User.hasMany(Order, {
 Order.belongsToMany(Product, { through: OrderItem });
 Product.belongsToMany(Order, { through: OrderItem });
 
+//liking system
+Product.hasMany(Like, { onDelete: "cascade" });
+User.hasMany(Like, { onDelete: "cascade" });
+
 //{ force: true }
+//{ alter: true }
 (async () => {
   try {
     await sequelize.authenticate();

@@ -81,11 +81,37 @@
 }
 
 .btn {
-  justify-self: flex-end;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  justify-items: right;
+  padding: 10px;
+}
+
+.likeBtn {
+  margin: 3px;
+  color: rgba(250, 250, 250, 0.8);
+}
+.likeBtn:hover {
+  cursor: pointer;
+}
+
+.unlikeBtn {
+  margin: 3px;
+  color: white;
+}
+
+.unlikeBtn:hover {
+  cursor: pointer;
+}
+
+.btn label {
+  margin: 3px;
+  font-size: 1.2rem;
 }
 
 .addCart {
-  margin: 0px 4px 3px 0px;
+  margin: 0px 0px 15px 0px;
   padding: 5px;
   background-color: white;
   border-radius: 4px;
@@ -189,6 +215,7 @@ td {
   margin-bottom: 20px;
   font-weight: 700;
 }
+
 /*responsive*/
 
 @media (max-width: 1600px) {

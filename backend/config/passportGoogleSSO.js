@@ -17,7 +17,7 @@ passport.use(
       console.log(profile);
       // default db user
       const defaultUser = {
-        username: ` ${profile.name.givenName} ${profile.name.familyName}`,
+        username: `${profile.displayName}`,
         email: profile.emails[0].value,
         password: "default_password",
         isAdmin: false,

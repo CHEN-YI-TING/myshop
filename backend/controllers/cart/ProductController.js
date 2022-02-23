@@ -1,11 +1,24 @@
+const Like = require("../../models/like");
 const Product = require("../../models/product");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const getAllProducts = async (req, res, next) => {
+  const userId = req.userId;
   try {
-    const products = await Product.findAll();
-    res.status(200).send(products);
+    //product has many likes
+    const products = await Product.findAll({ include: [Like] });
+    //every user has clicked like for products
+    if (userId == false) {
+      return res
+        .status(401)
+        .send({ products: products, error: "401錯誤:用戶未授權" });
+    } else {
+      const likedProducts = await Like.findAll({ where: { userId: userId } });
+      res
+        .status(200)
+        .send({ products: products, likedProducts: likedProducts });
+    }
   } catch (err) {
     console.log(err);
   }
@@ -42,7 +55,7 @@ const addProduct = async (req, res, next) => {
 
     await Product.create(productObj);
     const product = await Product.findAll();
-    res.status(200).send(product);
+    res.status(201).send(product);
   } catch (err) {
     console.log(err);
   }
@@ -66,7 +79,7 @@ const updateProduct = async (req, res, next) => {
     });
     const modifyProducts = await Product.findAll();
 
-    res.status(200).send(modifyProducts);
+    res.status(201).send(modifyProducts);
   } catch (err) {
     console.log(err.message);
   }
@@ -86,7 +99,7 @@ const deleteProduct = async (req, res, next) => {
     const id = req.params.productId;
     await Product.destroy({ where: { id: id, userId: userId } });
     const modifyProducts = await Product.findAll();
-    res.status(200).send(modifyProducts);
+    res.status(201).send(modifyProducts);
   } catch (err) {
     console.log(err);
   }
