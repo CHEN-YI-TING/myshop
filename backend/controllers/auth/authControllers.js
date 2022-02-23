@@ -74,13 +74,6 @@ const login_post = async (req, res, next) => {
   }
 };
 
-User.login = async (username, email, password) => {
-  try {
-  } catch (err) {
-    throw new Error("不好意思,您尚未註冊帳號");
-  }
-};
-
 const logout_get = async (req, res, next) => {
   try {
     res.cookie("jwt", "", { maxAge: 1 });
@@ -115,15 +108,7 @@ const checkUser = async (req, res, next) => {
 };
 
 const updatePassword = async (req, res, next) => {
-  const token = await req.cookies.jwt;
-  const userId = await jwt.verify(
-    token,
-    process.env.JWT_SECRET_KEY,
-    (error, decodedToken) => {
-      if (error) return res.status(400).send(error);
-      return decodedToken.id;
-    }
-  );
+  const userId = req.userId;
   const user = await User.findByPk(userId);
   const { oldPassword, password } = req.body;
   const match = await bcrypt.compare(oldPassword, user.password);
@@ -147,32 +132,10 @@ const updatePassword = async (req, res, next) => {
   }
 };
 
-/* const checkAdmin = async (req, res, next) => {
-  const token = await req.cookies.jwt;
-  if (!token) res.status(401).send(null);
-
-  const adminId = await jwt.verify(
-    token,
-   process.env.JWT_SECRET_KEY,
-    (error, decodedToken) => {
-      if (error) res.status(400).send(error);
-      return decodedToken.id;
-    }
-  );
-
-  let admin = await User.findAll({ where: { id: adminId, isAdmin: true } });
-  if (admin) {
-    res.status(200).json(admin);
-  } else {
-    res.status(404).send(null);
-  }
-}; */
-
 module.exports = {
   signup_post,
   login_post,
   logout_get,
   checkUser,
   updatePassword,
-  // checkAdmin,
 };

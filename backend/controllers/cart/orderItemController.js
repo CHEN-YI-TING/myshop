@@ -1,20 +1,9 @@
 const OrderItem = require("../../models/order-item");
 const Order = require("../../models/order");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
 const seeDetails = async (req, res, next) => {
   try {
-    const token = await req.cookies.jwt;
-    if (!token) return res.status(401).json({ error: "未授權" });
-    const userId = await jwt.verify(
-      token,
-      process.env.JWT_SECRET_KEY,
-      (error, decodedToken) => {
-        if (error) return res.status(400).send({ error: error });
-        return decodedToken.id;
-      }
-    );
+    const userId = req.userId;
     const orderId = req.params.orderId;
     if (!orderId) res.status(404).send({ error: "order not found" });
     Order.findAll({

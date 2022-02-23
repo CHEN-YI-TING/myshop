@@ -1,19 +1,9 @@
 const OrderItem = require("../../models/order-item");
 const Order = require("../../models/order");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
 const getAll = async (req, res, next) => {
   try {
-    const token = await req.cookies.jwt;
-    const userId = await jwt.verify(
-      token,
-      process.env.JWT_SECRET_KEY,
-      (error, decodedToken) => {
-        if (error) return res.status(400).send(error);
-        return decodedToken.id;
-      }
-    );
+    const userId = req.userId;
     Order.findAll({
       where: { userId: userId },
       attributes: { exclude: ["createdAt", "updatedAt"] },
@@ -34,17 +24,8 @@ const createOrder = async (req, res, next) => {
     return res.status(400).send({ error: "沒有內容" });
   }
   try {
-    const token = await req.cookies.jwt;
-    const userId = await jwt.verify(
-      token,
-      process.env.JWT_SECRET_KEY,
-      (error, decodedToken) => {
-        if (error) return res.status(400).send({ error: error });
-        return decodedToken.id;
-      }
-    );
     const { orderArray, allPrice } = req.body;
-
+    const userId = req.userId;
     Order.create({
       dataReceived: new Date(),
       userId: userId,
