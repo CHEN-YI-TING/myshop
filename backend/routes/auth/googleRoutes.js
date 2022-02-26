@@ -29,6 +29,8 @@ router.get(
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000,
+      sameSite: None,
+      secure: true,
     });
     res.status(201).json({ user: req.user });
   }

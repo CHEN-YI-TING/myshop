@@ -1,41 +1,35 @@
 import React, { useState } from "react";
-import "./login.css";
+import "../pages/Login/login.css";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-//password
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
 
 function Signup() {
+  const SERVER_API_URL = "http://localhost:5000";
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const usernameError = document.querySelector(".username.error");
   const emailError = document.querySelector(".email.error");
   const passwordError = document.querySelector(".password.error");
   let navigate = useNavigate();
-
   //password
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const handleClickShowPassword = () => {
     setShowPassword((showPassword) => !showPassword);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:5000/auth/signup", {
+      const res = await fetch(`${SERVER_API_URL}/auth/signup`, {
         method: "POST",
         mode: "cors",
         credentials: "include",

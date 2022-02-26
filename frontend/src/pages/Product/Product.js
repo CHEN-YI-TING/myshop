@@ -3,14 +3,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CreateIcon from "@mui/icons-material/Create";
 import "./product.css";
 
-//edit
-
 function Product() {
-  /* const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [imgUrl, setImgUrl] = useState("");
-  const [price, setPrice] = useState(""); */
-
+  const SERVER_API_URL = "http://localhost:5000";
   const [productList, setProductList] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [createProduct, setCreateProduct] = useState(
@@ -43,17 +37,17 @@ function Product() {
   );
 
   useEffect(() => {
-    fetch("http://localhost:5000/products", {
+    fetch(`${SERVER_API_URL}/products`, {
       headers: { "Content-Type": "application/json" },
     })
       .then((res) => res.json())
-      .then((products) => {
+      .then(({ products }) => {
         setProductList(products);
       });
   }, []);
 
   const deleteProduct = (id) => {
-    fetch(`http://localhost:5000/products/${id}`, {
+    fetch(`${SERVER_API_URL}/products/${id}`, {
       method: "DELETE",
       body: JSON.stringify({ productId: id }),
       headers: { "Content-Type": "application/json" },
@@ -71,7 +65,7 @@ function Product() {
   const updateProduct = (e) => {
     e.preventDefault();
     const id = editProduct.id;
-    fetch(`http://localhost:5000/products/${id}`, {
+    fetch(`${SERVER_API_URL}/products/${id}`, {
       method: "PATCH",
       mode: "cors",
       credentials: "include",
@@ -91,7 +85,7 @@ function Product() {
 
   const addProduct = (e) => {
     e.preventDefault();
-    fetch("http://localhost:5000/products/new", {
+    fetch(`${SERVER_API_URL}/products/new`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(createProduct),

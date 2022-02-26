@@ -5,18 +5,26 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import CartListProvider from "./contexts/CartListContext";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+const STRIPE_PUBLIC_KEY =
+  "pk_test_51KWktUJXb1zkNSJCaKK5HlMxJlIE3YuyidRJ6FDwr5MbHlyNm2Pare1TiSXyFZfIWcCLBphzvWrRiNVg1T3OWCK100miBzFapK";
+const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthProvider>
-      <CartListProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/*" element={<App />} />
-          </Routes>
-        </BrowserRouter>
-      </CartListProvider>
-    </AuthProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <CartListProvider>
+          <Elements stripe={stripePromise}>
+            <Routes>
+              <Route path="/*" element={<App />} />
+            </Routes>
+          </Elements>
+        </CartListProvider>
+      </AuthProvider>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")
 );

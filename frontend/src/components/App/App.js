@@ -1,24 +1,31 @@
 import Home from "../../pages/Home";
-import Login from "../../pages/Login";
+import Login from "../../pages/Login/Login";
+import LoginSuccess from "../../pages/Login/LoginSuccess";
+import LoginError from "../../pages/Login/LoginError";
 import Signup from "../../pages/Signup";
-import PageNotFound from "../../pages/PageNotFound";
+import PageNotFound from "../../pages/PageNotFound/PageNotFound";
 import Profile from "../../pages/Profile";
 import Personal from "../Profile/Personal";
 import ChangePwd from "../Profile/ChangePwd";
 import OrderHistory from "../Profile/OrderHistory";
 import OrderDetail from "../Profile/OrderDetail";
-import Admin from "../../pages/Admin";
-import Product from "../../pages/Product";
+import Admin from "../../pages/Admin/Admin";
+import Product from "../../pages/Product/Product";
 import Order from "../../pages/Order";
+import Checkout from "../../pages/Checkout/Checkout";
+import CheckoutStripe from "../../pages/Checkout/CheckoutStripe";
+import CheckoutSuccess from "../../pages/Checkout/CheckoutSuccess";
+import CheckoutCanceled from "../../pages/Checkout/CheckoutCanceled";
 import { Navigate, Route, Routes } from "react-router-dom";
 //protected routes
-import UserProtected from "../ProtectRoutes/UserProtected";
-import AdminProtected from "../ProtectRoutes/AdminProtected";
+/* import UserProtected from "../ProtectRoutes/UserProtected";
+import AdminProtected from "../ProtectRoutes/AdminProtected"; */
 import Layout from "../Layout";
-import LoginSuccess from "../../pages/LoginSuccess";
-import LoginError from "../../pages/LoginError";
+
+import { useAuth } from "../../contexts/AuthContext";
 
 function App() {
+  const { user, admin } = useAuth();
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
@@ -34,46 +41,31 @@ function App() {
 
         {/*  user protected routed  */}
 
-        <Route
-          path="/profile"
-          element={
-            <UserProtected>
-              <Profile />
-            </UserProtected>
-          }
-        >
-          <Route path="personal" element={<Personal />} />
-          <Route path="changePwd" element={<ChangePwd />} />
-          <Route path="orderHistory" element={<OrderHistory />} />
-          <Route path=":id" element={<OrderDetail />} />
-        </Route>
-        <Route
-          path="/order"
-          element={
-            <UserProtected>
-              <Order />
-            </UserProtected>
-          }
-        ></Route>
+        {user && (
+          <>
+            <Route path="/profile" element={<Profile />}>
+              <Route path="personal" element={<Personal />} />
+              <Route path="changePwd" element={<ChangePwd />} />
+              <Route path="orderHistory" element={<OrderHistory />} />
+              <Route path=":id" element={<OrderDetail />} />
+            </Route>
+            <Route path="/checkout" element={<Checkout />}>
+              <Route index element={<Order />} />
+              <Route path="stripe" element={<CheckoutStripe />} />
+              <Route path="success" element={<CheckoutSuccess />} />
+              <Route path="canceled" element={<CheckoutCanceled />} />
+            </Route>
+          </>
+        )}
 
         {/*  admin protected routed  */}
 
-        <Route
-          path="/admin"
-          element={
-            <AdminProtected>
-              <Admin />
-            </AdminProtected>
-          }
-        ></Route>
-        <Route
-          path="/product"
-          element={
-            <AdminProtected>
-              <Product />
-            </AdminProtected>
-          }
-        ></Route>
+        {admin && (
+          <>
+            <Route path="/admin" element={<Admin />}></Route>
+            <Route path="/product" element={<Product />}></Route>
+          </>
+        )}
 
         {/*  missing routed */}
         <Route path="*" element={<PageNotFound />}></Route>

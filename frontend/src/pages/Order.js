@@ -1,21 +1,18 @@
 import React, { useState, useEffect, useContext } from "react";
+import { CartListContext } from "../contexts/CartListContext";
 import { useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
-import "../components/Home/home.css";
 import DeleteIcon from "@mui/icons-material/Delete";
-import "../components/Home/home.css";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-
-import { CartListContext } from "../contexts/CartListContext";
+import "../components/Home/home.css";
 
 function Order() {
-  const [creditCartMode, setCreditCartMode] = useState(true);
-
   let navigate = useNavigate();
   const {
     cartList,
     setCartList,
+    clearCart,
     deleteCartItem,
     increment,
     decrement,
@@ -31,28 +28,6 @@ function Order() {
     const data = JSON.parse(localStorage.getItem("cartList"));
     setCartList(data);
   }, []);
-
-  const createOrder = () => {
-    fetch("http://localhost:5000/order", {
-      method: "POST",
-      body: JSON.stringify({
-        orderArray: cartList,
-        allPrice: totalPrice,
-      }),
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        localStorage.removeItem("cartList");
-        navigate(`/profile/${data.orderId}`);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  //pay validation
 
   return (
     <div>
@@ -111,25 +86,22 @@ function Order() {
               </table>
             </div>
           ))}
-          <div className="totalPrice">{`你的訂單總共的價格為 ${totalPrice} 元,確認好再下單`}</div>
+          <div className="totalPrice">
+            {`你的訂單總共的價格為 ${totalPrice} 元`}
+            <button className="orderBtn" onClick={clearCart}>
+              清除購物車
+            </button>
+          </div>
 
           <div>
-            {!creditCartMode && (
-              <>
-                <button className="orderBtn" onClick={createOrder}>
-                  請先輸入信用卡驗證
-                </button>
-              </>
-            )}
-          </div>
-          <div>
-            {creditCartMode && (
-              <>
-                <button className="orderBtn" onClick={createOrder}>
-                  下訂單
-                </button>
-              </>
-            )}
+            <button
+              className="orderBtn"
+              onClick={() => {
+                navigate("/checkout/stripe");
+              }}
+            >
+              下訂單
+            </button>
           </div>
         </div>
       </Paper>

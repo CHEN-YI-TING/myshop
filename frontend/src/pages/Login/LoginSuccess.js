@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import "./login.css";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 function LoginSuccess() {
+  const SERVER_API_URL = "http://localhost:5000";
   const { setUser, user } = useAuth();
   useEffect(() => {
-    fetch("http://localhost:5000/auth/user", {
+    fetch(`${SERVER_API_URL}/auth/user`, {
       mode: "cors",
       credentials: "include",
       headers: {

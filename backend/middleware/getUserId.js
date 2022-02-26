@@ -6,7 +6,7 @@ module.exports = async (req, res, next) => {
   const token = await req.cookies.jwt;
   try {
     if (!token) {
-      req.userId == false;
+      req.userId === undefined;
       next();
     } else {
       const userId = await jwt.verify(
@@ -22,7 +22,7 @@ module.exports = async (req, res, next) => {
         req.userId = user.id;
         next();
       } else {
-        req.userId == false;
+        req.userId === undefined;
         next();
       }
     }

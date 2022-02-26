@@ -76,6 +76,7 @@ const login_post = async (req, res, next) => {
 
 const logout_get = async (req, res, next) => {
   try {
+    req.logout();
     res.cookie("jwt", "", { maxAge: 1 });
     res.status(200).json({ 成功: "你已經成功登出" });
   } catch (err) {

@@ -1,0 +1,58 @@
+.checkout_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px auto;
+  background-color: #eee;
+  width: 100%;
+}
+
+.checkout_title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  font-family: "Courier New", Courier, monospace;
+  margin: 120px auto;
+}
+
+.checkout_form {
+  border: transparent;
+  border-radius: 22px;
+  background-color: burlywood;
+  padding: 30px 50px 100px 50px;
+  display: grid;
+  margin: 100px auto;
+}
+
+.checkout_h2 {
+  font-size: 1.7rem;
+  font-weight: 600;
+  text-align: center;
+  font-family: "Courier New", Courier, monospace;
+  margin-bottom: 25px;
+}
+
+.checkout_input {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+.checkout_content {
+  text-align: right;
+}
+
+.checkout_btn {
+  border-radius: 4px;
+  background-color: black;
+  color: white;
+  font-weight: 600;
+  padding: 10px 15px 10px 15px;
+  font-size: 1rem;
+  border: transparent;
+}
+
+.checkout_btn:hover {
+  cursor: pointer;
+  color: black;
+  background-color: aliceblue;
+}

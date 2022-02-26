@@ -44,7 +44,7 @@ const CartListProvider = (props) => {
         setCartList(sortArr);
         localStorage.setItem("cartList", JSON.stringify(sortArr));
       } else {
-        console.log("你已加入購物車");
+        alert("你已加入購物車");
       }
     }
   };
@@ -82,13 +82,25 @@ const CartListProvider = (props) => {
       qty: find.qty - 1,
     };
     const newList = [...other, updateList];
-    let sortList = newList.sort((a, b) => {
-      if (a.id > b.id) return 1;
-      else if (b.id > a.id) return -1;
-      else return 0;
-    });
-    setCartList(sortList);
-    localStorage.setItem("cartList", JSON.stringify(sortList));
+    //check if data item < 0
+    if (updateList.qty <= 0) {
+      let newList = [...other];
+      let sortList = newList.sort((a, b) => {
+        if (a.id > b.id) return 1;
+        else if (b.id > a.id) return -1;
+        else return 0;
+      });
+      setCartList(sortList);
+      localStorage.setItem("cartList", JSON.stringify(sortList));
+    } else {
+      let sortList = newList.sort((a, b) => {
+        if (a.id > b.id) return 1;
+        else if (b.id > a.id) return -1;
+        else return 0;
+      });
+      setCartList(sortList);
+      localStorage.setItem("cartList", JSON.stringify(sortList));
+    }
   };
 
   const deleteCartItem = async (id) => {
@@ -101,11 +113,20 @@ const CartListProvider = (props) => {
 
   const countTotal = async () => {
     const data = await JSON.parse(localStorage.getItem("cartList"));
-    let total = 0;
-    data.forEach((item) => {
-      total += item.price * item.qty;
-    });
-    setTotalPrice(total);
+    if (!data) {
+      setTotalPrice(0);
+    } else {
+      let total = 0;
+      data.forEach((item) => {
+        total += item.price * item.qty;
+      });
+      setTotalPrice(total);
+    }
+  };
+
+  const clearCart = async () => {
+    localStorage.removeItem("cartList");
+    setCartList([]);
   };
 
   return (
@@ -114,6 +135,7 @@ const CartListProvider = (props) => {
         cartList,
         setCartList,
         addCart,
+        clearCart,
         increment,
         decrement,
         deleteCartItem,

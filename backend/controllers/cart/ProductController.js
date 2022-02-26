@@ -5,11 +5,12 @@ const getAllProducts = async (req, res, next) => {
   const userId = req.userId;
   try {
     //product has many likes
+
     const products = await Product.findAll({ include: [Like] });
     //every user has clicked like for products
-    if (userId == false) {
+    if (userId === undefined) {
       return res
-        .status(401)
+        .status(201)
         .send({ products: products, error: "401錯誤:用戶未授權" });
     } else {
       const likedProducts = await Like.findAll({ where: { userId: userId } });

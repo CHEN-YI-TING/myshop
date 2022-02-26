@@ -77,7 +77,7 @@ function CartList() {
       <button
         className="orderBtn"
         onClick={() => {
-          navigate("/order");
+          navigate("/checkout");
         }}
       >
         結帳

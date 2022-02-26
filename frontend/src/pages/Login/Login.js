@@ -11,9 +11,10 @@ import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import TextField from "@mui/material/TextField";
 import GoogleButton from "react-google-button";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 function Login() {
+  const SERVER_API_URL = "http://localhost:5000";
   //login state
   const { setUser, setAdmin } = useAuth();
   const [username, setUsername] = useState("");
@@ -34,7 +35,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      fetch("http://localhost:5000/auth/login", {
+      fetch(`${SERVER_API_URL}/auth/login`, {
         method: "POST",
         mode: "cors",
         credentials: "include",
@@ -70,8 +71,8 @@ function Login() {
   };
 
   const google = async () => {
-    const newWindow = window.open(
-      "http://localhost:5000/auth/google",
+    window.open(
+      `${SERVER_API_URL}/auth/google`,
       "_blank",
       "width=500,height=600"
     );
