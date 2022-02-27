@@ -13,7 +13,7 @@
 
 ## `Demo`
 
-點擊可至我部署的連結查看該網站功能:
+點擊可至我部署的連結查看該網站功能:[點我](https://elegant-meninsky-da2112.netlify.app/)
 
 ## `使用技術`
 
